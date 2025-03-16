@@ -64,9 +64,9 @@ public:
     QVBoxLayout *verticalLayout_8;
     QTableWidget *twEntries;
     QVBoxLayout *verticalLayout_9;
-    QPushButton *pushButton_10;
-    QPushButton *pushButton_11;
-    QPushButton *pushButton_12;
+    QPushButton *btnEntryCheckOut;
+    QPushButton *btnEntryCheckIn;
+    QPushButton *btnEntrySearch;
     QHBoxLayout *horizontalLayout_6;
     QPushButton *btnClearEntries;
     QSpacerItem *horizontalSpacer;
@@ -245,20 +245,20 @@ public:
 
         verticalLayout_9 = new QVBoxLayout();
         verticalLayout_9->setObjectName("verticalLayout_9");
-        pushButton_10 = new QPushButton(verticalLayoutWidget_6);
-        pushButton_10->setObjectName("pushButton_10");
+        btnEntryCheckOut = new QPushButton(verticalLayoutWidget_6);
+        btnEntryCheckOut->setObjectName("btnEntryCheckOut");
 
-        verticalLayout_9->addWidget(pushButton_10);
+        verticalLayout_9->addWidget(btnEntryCheckOut);
 
-        pushButton_11 = new QPushButton(verticalLayoutWidget_6);
-        pushButton_11->setObjectName("pushButton_11");
+        btnEntryCheckIn = new QPushButton(verticalLayoutWidget_6);
+        btnEntryCheckIn->setObjectName("btnEntryCheckIn");
 
-        verticalLayout_9->addWidget(pushButton_11);
+        verticalLayout_9->addWidget(btnEntryCheckIn);
 
-        pushButton_12 = new QPushButton(verticalLayoutWidget_6);
-        pushButton_12->setObjectName("pushButton_12");
+        btnEntrySearch = new QPushButton(verticalLayoutWidget_6);
+        btnEntrySearch->setObjectName("btnEntrySearch");
 
-        verticalLayout_9->addWidget(pushButton_12);
+        verticalLayout_9->addWidget(btnEntrySearch);
 
 
         horizontalLayout_3->addLayout(verticalLayout_9);
@@ -298,10 +298,10 @@ public:
         QWidget::setTabOrder(btnReaderAdd, btnReaderRemove);
         QWidget::setTabOrder(btnReaderRemove, btnReaderSearch);
         QWidget::setTabOrder(btnReaderSearch, btnClearReaders);
-        QWidget::setTabOrder(btnClearReaders, pushButton_10);
-        QWidget::setTabOrder(pushButton_10, pushButton_11);
-        QWidget::setTabOrder(pushButton_11, pushButton_12);
-        QWidget::setTabOrder(pushButton_12, twBooks);
+        QWidget::setTabOrder(btnClearReaders, btnEntryCheckOut);
+        QWidget::setTabOrder(btnEntryCheckOut, btnEntryCheckIn);
+        QWidget::setTabOrder(btnEntryCheckIn, btnEntrySearch);
+        QWidget::setTabOrder(btnEntrySearch, twBooks);
         QWidget::setTabOrder(twBooks, twReaders);
         QWidget::setTabOrder(twReaders, btnClearEntries);
         QWidget::setTabOrder(btnClearEntries, twEntries);
@@ -325,9 +325,9 @@ public:
         btnReaderSearch->setText(QCoreApplication::translate("MainWindow", "\320\237\320\276\320\270\321\201\320\272", nullptr));
         btnClearReaders->setText(QCoreApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 \320\264\320\260\320\275\320\275\321\213\320\265", nullptr));
         label_4->setText(QCoreApplication::translate("MainWindow", "\320\222\321\213\320\264\320\260\321\207\320\260/\320\277\321\200\320\270\320\265\320\274 \320\272\320\275\320\270\320\263", nullptr));
-        pushButton_10->setText(QCoreApplication::translate("MainWindow", "\320\222\321\213\320\264\320\260\321\202\321\214", nullptr));
-        pushButton_11->setText(QCoreApplication::translate("MainWindow", "\320\237\321\200\320\270\320\275\321\217\321\202\321\214", nullptr));
-        pushButton_12->setText(QCoreApplication::translate("MainWindow", "\320\237\320\276\320\270\321\201\320\272", nullptr));
+        btnEntryCheckOut->setText(QCoreApplication::translate("MainWindow", "\320\222\321\213\320\264\320\260\321\202\321\214", nullptr));
+        btnEntryCheckIn->setText(QCoreApplication::translate("MainWindow", "\320\237\321\200\320\270\320\275\321\217\321\202\321\214", nullptr));
+        btnEntrySearch->setText(QCoreApplication::translate("MainWindow", "\320\237\320\276\320\270\321\201\320\272", nullptr));
         btnClearEntries->setText(QCoreApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 \320\264\320\260\320\275\320\275\321\213\320\265", nullptr));
     } // retranslateUi
 

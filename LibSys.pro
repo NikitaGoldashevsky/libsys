@@ -13,6 +13,7 @@ SOURCES += \
     EntriesL.cpp \
     ReadersHT.cpp \
     addbookdialog.cpp \
+    addentrydialog.cpp \
     addreaderdialog.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -27,6 +28,7 @@ HEADERS += \
     TestsList.h \
     TestsTree.h \
     addbookdialog.h \
+    addentrydialog.h \
     addreaderdialog.h \
     mainwindow.h \
     removebookdialog.h \
@@ -34,6 +36,7 @@ HEADERS += \
 
 FORMS += \
     addbookdialog.ui \
+    addentrydialog.ui \
     addreaderdialog.ui \
     mainwindow.ui \
     removebookdialog.ui \

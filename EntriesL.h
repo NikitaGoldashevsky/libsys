@@ -3,6 +3,7 @@
 
 #include <string>
 #include <QDebug>
+#include <QTableWidget>
 
 struct Entry {
     Entry* next;
@@ -24,7 +25,9 @@ public:
     void print() const;
     void clear();
     int size() const;
+    bool has(const std::string& card, const std::string& cipher) const;
 
+    void fillTableWidget(QTableWidget *tableWidget);
 private:
     Entry* head;
     Entry* tail;

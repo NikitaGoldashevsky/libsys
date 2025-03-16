@@ -252,21 +252,21 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_9">
            <item>
-            <widget class="QPushButton" name="pushButton_10">
+            <widget class="QPushButton" name="btnEntryCheckOut">
              <property name="text">
               <string>Выдать</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_11">
+            <widget class="QPushButton" name="btnEntryCheckIn">
              <property name="text">
               <string>Принять</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_12">
+            <widget class="QPushButton" name="btnEntrySearch">
              <property name="text">
               <string>Поиск</string>
              </property>
@@ -326,9 +326,9 @@
   <tabstop>btnReaderRemove</tabstop>
   <tabstop>btnReaderSearch</tabstop>
   <tabstop>btnClearReaders</tabstop>
-  <tabstop>pushButton_10</tabstop>
-  <tabstop>pushButton_11</tabstop>
-  <tabstop>pushButton_12</tabstop>
+  <tabstop>btnEntryCheckOut</tabstop>
+  <tabstop>btnEntryCheckIn</tabstop>
+  <tabstop>btnEntrySearch</tabstop>
   <tabstop>twBooks</tabstop>
   <tabstop>twReaders</tabstop>
   <tabstop>btnClearEntries</tabstop>

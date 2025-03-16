@@ -8,6 +8,7 @@
 #include "removebookdialog.h"
 #include "addreaderdialog.h"
 #include "removereaderdialog.h"
+#include "addentrydialog.h"
 
 #include "BooksT.h"
 #include "ReadersHT.h"
@@ -42,6 +43,10 @@ private slots:
     void btnReaderAdd_clicked();
     void btnClearReaders_clicked();
     void btnReaderRemove_clicked();
+
+    void btnEntryCheckIn_clicked();
+    void btnEntryCheckOut_clicked();
+    void btnClearEntries_clicked();
 };
 
 #endif // MAINWINDOW_H

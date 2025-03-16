@@ -16,20 +16,26 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnReaderRemove, &QPushButton::clicked, this, &MainWindow::btnReaderRemove_clicked);
     connect(ui->btnClearReaders, &QPushButton::clicked, this, &MainWindow::btnClearReaders_clicked);
 
+    connect(ui->btnEntryCheckOut, &QPushButton::clicked, this, &MainWindow::btnEntryCheckOut_clicked);
+    connect(ui->btnEntryCheckIn, &QPushButton::clicked, this, &MainWindow::btnEntryCheckIn_clicked);
+    connect(ui->btnClearEntries, &QPushButton::clicked, this, &MainWindow::btnClearEntries_clicked);
+
     // Startup Data--------------
-    books.add(new Book{"001.001", "Thomas De Quincey", "Confessions of an English Opium-Eater", "Some publisher idk", 1822, 3, 0});
     books.add(new Book{"001.002", "Stephen King", "Billy summers", "Some American publisher idk", 2015, 4, 1});
+    books.add(new Book{"001.001", "Thomas De Quincey", "Confessions of an English Opium-Eater", "Some publisher idk", 1822, 3, 0});
 
     readers.add(new Reader{"Ч0001-25", "David Lockridge", 1978, "Colorado", "Serial killer"});
     readers.add(new Reader{"Ч0002-25", "John Smith", 1234, "Gallifrey", "Time traveller"});
+
+    entries.add("Ч0001-25", "001.001", "21.03.2011", "25.03.2011");
+    entries.add("Ч0002-25", "001.002", "27.03.2011", "-");
 
     // --------------------------
 
     updateTableWidgets();
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     books.clear();
     readers.clear();
     entries.clear();
@@ -87,14 +93,12 @@ void MainWindow::btnReaderRemove_clicked() {
     updateTableWidgets();
 }
 
-void MainWindow::btnClearBooks_clicked()
-{
+void MainWindow::btnClearBooks_clicked() {
     books.clear();
     updateTableWidgets();
 }
 
-void MainWindow::btnReaderAdd_clicked()
-{
+void MainWindow::btnReaderAdd_clicked() {
     AddReaderDialog d(this);
     if (d.exec() == QDialog::Accepted) {
         if (d.getCard() == "") {
@@ -114,9 +118,39 @@ void MainWindow::btnReaderAdd_clicked()
     }
 }
 
-void MainWindow::btnClearReaders_clicked()
-{
+void MainWindow::btnClearReaders_clicked() {
     readers.clear();
+    updateTableWidgets();
+}
+
+void MainWindow::btnEntryCheckIn_clicked() {
+    updateTableWidgets();
+}
+
+void MainWindow::btnEntryCheckOut_clicked() {
+    AddEntryDialog d(this);
+    if (d.exec() == QDialog::Accepted) {
+        // // error handling
+        // if (d.getCard() == "") {
+        //     QMessageBox::critical(this, "Ошибка", "Введенный номер билета некорректен!");
+        //     return;
+        // }
+
+        if (!entries.has(d.getCard(), d.getCipher()))
+            entries.add(d.getCard(), d.getCipher(), d.getCheckOutDate(), "-");
+        else {
+            QMessageBox::critical(this, "Ошибка", "Запись с указанными номером билета"
+                                                  " и шифром уже есть в базе данных!");
+            return;
+        }
+        updateTableWidgets();
+    }
+
+    updateTableWidgets();
+}
+
+void MainWindow::btnClearEntries_clicked() {
+    entries.clear();
     updateTableWidgets();
 }
 
@@ -132,7 +166,7 @@ void MainWindow::updateTableWidgets() {
     readers.fillTableWidget(ui->twReaders);
 
     // Entries
-
-
-
+    ui->twEntries->setColumnCount(4);
+    ui->twEntries->setHorizontalHeaderLabels(QStringList{"Номер билета", "Шифр", "Дата выдачи", "Дата возврата"});
+    entries.fillTableWidget(ui->twEntries);
 }

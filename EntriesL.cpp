@@ -57,3 +57,33 @@ int EntriesL::size() const {
     }
     return count;
 }
+
+bool EntriesL::has(const std::string& card, const std::string& cipher) const {
+    Entry* current = head;
+    while (current) {
+        if (current->card == card && current->cipher == cipher) {
+            return true;
+        }
+        current = current->next;
+    }
+    return false;
+}
+
+void EntriesL::fillTableWidget(QTableWidget* tableWidget) {
+    if (!tableWidget) return;
+
+    tableWidget->setRowCount(0);
+    int row = 0;
+
+    Entry* current = head;
+    while (current) {
+        tableWidget->insertRow(row);
+        tableWidget->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(current->card)));
+        tableWidget->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(current->cipher)));
+        tableWidget->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(current->issueDate)));
+        tableWidget->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(current->returnDate)));
+
+        row++;
+        current = current->next;
+    }
+}
