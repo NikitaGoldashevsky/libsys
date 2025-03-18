@@ -112,6 +112,21 @@ bool EntriesL::has(const std::string& card, const std::string& cipher) const {
     return false;
 }
 
+std::string EntriesL::getCiphersByCard(const std::string& card) const {
+    std::string result;
+    Entry* current = head;
+    while (current) {
+        if (current->card == card) {
+            if (!result.empty()) {
+                result += " ";
+            }
+            result += current->cipher;
+        }
+        current = current->next;
+    }
+    return result;
+}
+
 void EntriesL::fillTableWidget(QTableWidget* tableWidget) {
     if (!tableWidget) return;
 

@@ -26,7 +26,7 @@ public:
     void clear();
     int size() const;
     bool has(const std::string& card, const std::string& cipher) const;
-
+    std::string getCiphersByCard(const std::string& card) const;
     void fillTableWidget(QTableWidget *tableWidget);
     void sort();
     void remove(const std::string &card, const std::string &cipher);

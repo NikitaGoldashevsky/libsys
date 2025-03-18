@@ -19,7 +19,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     removebookdialog.cpp \
-    removereaderdialog.cpp
+    removereaderdialog.cpp \
+    searchreaderdialog.cpp
 
 HEADERS += \
     BooksT.h \
@@ -34,7 +35,8 @@ HEADERS += \
     closeentrydialog.h \
     mainwindow.h \
     removebookdialog.h \
-    removereaderdialog.h
+    removereaderdialog.h \
+    searchreaderdialog.h
 
 FORMS += \
     addbookdialog.ui \
@@ -43,7 +45,8 @@ FORMS += \
     closeentrydialog.ui \
     mainwindow.ui \
     removebookdialog.ui \
-    removereaderdialog.ui
+    removereaderdialog.ui \
+    searchreaderdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnBookAdd, &QPushButton::clicked, this, &MainWindow::btnBookAdd_clicked);
     connect(ui->btnBookRemove, &QPushButton::clicked, this, &MainWindow::btnBookRemove_clicked);
     connect(ui->btnClearBooks, &QPushButton::clicked, this, &MainWindow::btnClearBooks_clicked);
+    connect(ui->btnReaderSearch, &QPushButton::clicked, this, &MainWindow::btnReaderSearch_clicked);
 
     connect(ui->btnReaderAdd, &QPushButton::clicked, this, &MainWindow::btnReaderAdd_clicked);
     connect(ui->btnReaderRemove, &QPushButton::clicked, this, &MainWindow::btnReaderRemove_clicked);
@@ -27,8 +28,8 @@ MainWindow::MainWindow(QWidget *parent)
     readers.add(new Reader{"Ч0001-25", "David Lockridge", 1978, "Colorado", "Serial killer"});
     readers.add(new Reader{"Ч0002-25", "John Smith", 1234, "Gallifrey", "Time traveller"});
 
-    entries.add("Ч0001-25", "001.001", "21.03.2011", "25.03.2011");
-    entries.add("Ч0002-25", "001.002", "27.03.2011", "-");
+    entries.add("Ч0001-25", "001.002", "21.03.2011", "25.03.2011");
+    entries.add("Ч0002-25", "001.001", "27.03.2011", "-");
 
     // --------------------------
 
@@ -146,14 +147,19 @@ void MainWindow::btnEntryCheckIn_clicked() {
 void MainWindow::btnEntryCheckOut_clicked() {
     AddEntryDialog d(this);
     if (d.exec() == QDialog::Accepted) {
-        // // error handling
-        // if (d.getCard() == "") {
-        //     QMessageBox::critical(this, "Ошибка", "Введенный номер билета некорректен!");
-        //     return;
-        // }
+        const std::string card = d.getCard();
+        const std::string cipher = d.getCipher();
 
-        if (!entries.has(d.getCard(), d.getCipher()))
-            entries.add(d.getCard(), d.getCipher(), d.getCheckOutDate(), "-");
+        if (!readers.has(card)) {
+            QMessageBox::critical(this, "Ошибка", "Указанный номер билета не соответствует ни одному читалелю!");
+            return;
+        } else if (!books.has(cipher)) {
+            QMessageBox::critical(this, "Ошибка", "Указанный шифр не соответствует ни одной книге!");
+            return;
+        }
+
+        if (!entries.has(card, cipher))
+            entries.add(card, cipher, d.getCheckOutDate(), "-");
         else {
             QMessageBox::critical(this, "Ошибка", "Запись с указанными номером билета"
                                                   " и шифром уже есть в базе данных!");
@@ -183,4 +189,22 @@ void MainWindow::updateTableWidgets() {
     ui->twEntries->setColumnCount(4);
     ui->twEntries->setHorizontalHeaderLabels(QStringList{"Номер билета", "Шифр", "Дата выдачи", "Дата возврата"});
     entries.fillTableWidget(ui->twEntries);
+}
+
+void MainWindow::btnReaderSearch_clicked() {
+    SearchReaderDialog *dialog = new SearchReaderDialog(this);
+    dialog->exec();
+    delete dialog;
+}
+
+ReadersHT* MainWindow::getReadersHT() {
+    return &readers;
+}
+
+BooksT* MainWindow::getBooksT() {
+    return &books;
+}
+
+EntriesL* MainWindow::getEntriesL() {
+    return &entries;
 }

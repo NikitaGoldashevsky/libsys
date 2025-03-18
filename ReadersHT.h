@@ -57,7 +57,7 @@ public:
     bool remove(const std::string& card);
     void log() const;
     void clear();
-    void fillTableWidget(QTableWidget *tableWidget);
+    void fillTableWidget(QTableWidget *tableWidget, const std::string& fioFilter = "");
 };
 
 

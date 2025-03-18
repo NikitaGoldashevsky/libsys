@@ -10,6 +10,7 @@
 #include "removereaderdialog.h"
 #include "addentrydialog.h"
 #include "closeentrydialog.h"
+#include "searchreaderdialog.h"
 
 #include "BooksT.h"
 #include "ReadersHT.h"
@@ -28,7 +29,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+    ReadersHT* getReadersHT();
+    BooksT* getBooksT();
+    EntriesL *getEntriesL();
 private:
     Ui::MainWindow *ui;
     BooksT books = BooksT();
@@ -44,6 +47,7 @@ private slots:
     void btnReaderAdd_clicked();
     void btnClearReaders_clicked();
     void btnReaderRemove_clicked();
+    void btnReaderSearch_clicked();
 
     void btnEntryCheckIn_clicked();
     void btnEntryCheckOut_clicked();

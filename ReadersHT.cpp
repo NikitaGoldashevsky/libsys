@@ -138,23 +138,65 @@ void ReadersHT::log() const {
     qDebug() << "\n";
 }
 
-void ReadersHT::fillTableWidget(QTableWidget* tableWidget) {
+void ReadersHT::fillTableWidget(QTableWidget* tableWidget, const std::string& fioFilter) {
     if (!tableWidget) return;
 
-    tableWidget->setRowCount(0); // Clear previous data
+    auto toLower = [](char c) -> char {
+        return std::tolower(static_cast<unsigned char>(c));
+    };
+
+    auto boyerMooreSearchCaseInsensitive = [&](const std::string& text, const std::string& pattern) -> bool {
+        if (pattern.empty()) return true;
+
+        std::string lowerText;
+        lowerText.reserve(text.size());
+        for (char c : text) lowerText.push_back(toLower(c));
+
+        std::string lowerPattern;
+        lowerPattern.reserve(pattern.size());
+        for (char c : pattern) lowerPattern.push_back(toLower(c));
+
+        int m = lowerPattern.size();
+        int n = lowerText.size();
+
+        if (m > n) return false;
+
+        int badChar[256];
+        for (int i = 0; i < 256; i++) badChar[i] = -1;
+        for (int i = 0; i < m; i++) badChar[(unsigned char)lowerPattern[i]] = i;
+
+        int s = 0; // shift of pattern with respect to text
+        while (s <= (n - m)) {
+            int j = m - 1;
+
+            while (j >= 0 && lowerPattern[j] == lowerText[s + j]) j--;
+
+            if (j < 0) {
+                return true; // found
+            } else {
+                s += std::max(1, j - badChar[(unsigned char)lowerText[s + j]]);
+            }
+        }
+
+        return false;
+    };
+
+    tableWidget->setRowCount(0);
     int row = 0;
 
     for (int i = 0; i < size; ++i) {
         HTVal* current = data[i];
         if (current != nullptr && current->reader != nullptr) {
             Reader* reader = current->reader;
-            tableWidget->insertRow(row);
-            tableWidget->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(reader->card)));
-            tableWidget->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(reader->fio)));
-            tableWidget->setItem(row, 2, new QTableWidgetItem(QString::number(reader->birthYear)));
-            tableWidget->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(reader->address)));
-            tableWidget->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(reader->workplace)));
-            row++;
+            if (fioFilter.empty() || boyerMooreSearchCaseInsensitive(reader->fio, fioFilter)) {
+                tableWidget->insertRow(row);
+                tableWidget->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(reader->card)));
+                tableWidget->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(reader->fio)));
+                tableWidget->setItem(row, 2, new QTableWidgetItem(QString::number(reader->birthYear)));
+                tableWidget->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(reader->address)));
+                tableWidget->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(reader->workplace)));
+                row++;
+            }
         }
     }
 
@@ -162,7 +204,6 @@ void ReadersHT::fillTableWidget(QTableWidget* tableWidget) {
         tableWidget->resizeColumnToContents(column);
     }
 }
-
 
 void ReadersHT::clear() {
     for (int i = 0; i < size; ++i) {
