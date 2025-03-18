@@ -141,40 +141,48 @@ void ReadersHT::log() const {
 void ReadersHT::fillTableWidget(QTableWidget* tableWidget, const std::string& fioFilter) {
     if (!tableWidget) return;
 
-    auto toLower = [](char c) -> char {
-        return std::tolower(static_cast<unsigned char>(c));
-    };
-
-    auto boyerMooreSearchCaseInsensitive = [&](const std::string& text, const std::string& pattern) -> bool {
+    auto kmpSearch = [](const std::string& text, const std::string& pattern) -> bool {
         if (pattern.empty()) return true;
 
-        std::string lowerText;
-        lowerText.reserve(text.size());
-        for (char c : text) lowerText.push_back(toLower(c));
+        auto toLower = [](const std::string& str) {
+            std::string res = str;
+            for (auto& ch : res) ch = std::tolower(ch);
+            return res;
+        };
 
-        std::string lowerPattern;
-        lowerPattern.reserve(pattern.size());
-        for (char c : pattern) lowerPattern.push_back(toLower(c));
+        std::string lowerText = toLower(text);
+        std::string lowerPattern = toLower(pattern);
 
         int m = lowerPattern.size();
         int n = lowerText.size();
 
-        if (m > n) return false;
-
-        int badChar[256];
-        for (int i = 0; i < 256; i++) badChar[i] = -1;
-        for (int i = 0; i < m; i++) badChar[(unsigned char)lowerPattern[i]] = i;
-
-        int s = 0; // shift of pattern with respect to text
-        while (s <= (n - m)) {
-            int j = m - 1;
-
-            while (j >= 0 && lowerPattern[j] == lowerText[s + j]) j--;
-
-            if (j < 0) {
-                return true; // found
+        std::vector<int> lps(m, 0);
+        int len = 0, i = 1;
+        while (i < m) {
+            if (lowerPattern[i] == lowerPattern[len]) {
+                lps[i++] = ++len;
+            } else if (len != 0) {
+                len = lps[len - 1];
             } else {
-                s += std::max(1, j - badChar[(unsigned char)lowerText[s + j]]);
+                lps[i++] = 0;
+            }
+        }
+
+        i = 0;
+        int j = 0;
+        while (i < n) {
+            if (lowerPattern[j] == lowerText[i]) {
+                i++; j++;
+            }
+
+            if (j == m) {
+                return true;
+            } else if (i < n && lowerPattern[j] != lowerText[i]) {
+                if (j != 0) {
+                    j = lps[j - 1];
+                } else {
+                    i++;
+                }
             }
         }
 
@@ -188,7 +196,7 @@ void ReadersHT::fillTableWidget(QTableWidget* tableWidget, const std::string& fi
         HTVal* current = data[i];
         if (current != nullptr && current->reader != nullptr) {
             Reader* reader = current->reader;
-            if (fioFilter.empty() || boyerMooreSearchCaseInsensitive(reader->fio, fioFilter)) {
+            if (fioFilter.empty() || kmpSearch(reader->fio, fioFilter)) {
                 tableWidget->insertRow(row);
                 tableWidget->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(reader->card)));
                 tableWidget->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(reader->fio)));
