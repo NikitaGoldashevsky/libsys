@@ -15,6 +15,7 @@ SOURCES += \
     addbookdialog.cpp \
     addentrydialog.cpp \
     addreaderdialog.cpp \
+    closeentrydialog.cpp \
     main.cpp \
     mainwindow.cpp \
     removebookdialog.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     addbookdialog.h \
     addentrydialog.h \
     addreaderdialog.h \
+    closeentrydialog.h \
     mainwindow.h \
     removebookdialog.h \
     removereaderdialog.h
@@ -38,6 +40,7 @@ FORMS += \
     addbookdialog.ui \
     addentrydialog.ui \
     addreaderdialog.ui \
+    closeentrydialog.ui \
     mainwindow.ui \
     removebookdialog.ui \
     removereaderdialog.ui

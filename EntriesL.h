@@ -21,13 +21,15 @@ public:
     ~EntriesL();
 
     void add(const std::string& card, const std::string& cipher, const std::string& issueDate, const std::string& returnDate);
-    Entry* find(const std::string& card);
+    Entry* get(const std::string& card, const std::string& cipher);
     void print() const;
     void clear();
     int size() const;
     bool has(const std::string& card, const std::string& cipher) const;
 
     void fillTableWidget(QTableWidget *tableWidget);
+    void sort();
+    void remove(const std::string &card, const std::string &cipher);
 private:
     Entry* head;
     Entry* tail;

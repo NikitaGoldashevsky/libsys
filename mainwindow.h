@@ -9,6 +9,7 @@
 #include "addreaderdialog.h"
 #include "removereaderdialog.h"
 #include "addentrydialog.h"
+#include "closeentrydialog.h"
 
 #include "BooksT.h"
 #include "ReadersHT.h"

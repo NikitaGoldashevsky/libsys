@@ -124,6 +124,22 @@ void MainWindow::btnClearReaders_clicked() {
 }
 
 void MainWindow::btnEntryCheckIn_clicked() {
+    CloseEntryDialog d(this);
+    if (d.exec() == QDialog::Accepted) {
+        // // error handling
+        // if (d.getCard() == "") {
+        //     QMessageBox::critical(this, "Ошибка", "Введенный номер билета некорректен!");
+        //     return;
+        // }
+
+        if (entries.has(d.getCard(), d.getCipher()))
+            entries.get(d.getCard(), d.getCipher())->returnDate = d.getCheckInDate();
+        else {
+            QMessageBox::critical(this, "Ошибка", "Запись с указанными номером билета"
+                                                  " и шифром отсутствует в базе данных!");
+            return;
+        }
+    }
     updateTableWidgets();
 }
 
@@ -143,9 +159,7 @@ void MainWindow::btnEntryCheckOut_clicked() {
                                                   " и шифром уже есть в базе данных!");
             return;
         }
-        updateTableWidgets();
     }
-
     updateTableWidgets();
 }
 

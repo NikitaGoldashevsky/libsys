@@ -15,12 +15,13 @@ void EntriesL::add(const std::string& card, const std::string& cipher, const std
         head = newEntry;
     }
     tail = newEntry;
+    sort();
 }
 
-Entry* EntriesL::find(const std::string& card) {
+Entry* EntriesL::get(const std::string& card, const std::string& cipher) {
     Entry* current = head;
     while (current) {
-        if (current->card == card) {
+        if (current->card == card && current->cipher == cipher) {
             return current;
         }
         current = current->next;
@@ -33,6 +34,48 @@ void EntriesL::print() const {
     while (current) {
         qDebug() << "Card: " << current->card << ", Cipher: " << current->cipher
                   << ", Issue Date: " << current->issueDate << ", Return Date: " << current->returnDate;
+        current = current->next;
+    }
+}
+
+void EntriesL::sort() {
+    if (!head || !head->next) return;
+
+    bool swapped;
+    do {
+        swapped = false;
+        Entry* current = head;
+        while (current->next) {
+            if (current->cipher > current->next->cipher) {
+                std::swap(current->card, current->next->card);
+                std::swap(current->cipher, current->next->cipher);
+                std::swap(current->issueDate, current->next->issueDate);
+                std::swap(current->returnDate, current->next->returnDate);
+                swapped = true;
+            }
+            current = current->next;
+        }
+    } while (swapped);
+}
+
+void EntriesL::remove(const std::string& card, const std::string& cipher) {
+    Entry* current = head;
+    while (current) {
+        if (current->card == card && current->cipher == cipher) {
+            if (current->prev) {
+                current->prev->next = current->next;
+            } else {
+                head = current->next;
+            }
+            if (current->next) {
+                current->next->prev = current->prev;
+            } else {
+                tail = current->prev;
+            }
+            delete current;
+            sort();
+            return;
+        }
         current = current->next;
     }
 }
