@@ -11,11 +11,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnBookAdd, &QPushButton::clicked, this, &MainWindow::btnBookAdd_clicked);
     connect(ui->btnBookRemove, &QPushButton::clicked, this, &MainWindow::btnBookRemove_clicked);
     connect(ui->btnClearBooks, &QPushButton::clicked, this, &MainWindow::btnClearBooks_clicked);
-    connect(ui->btnReaderSearch, &QPushButton::clicked, this, &MainWindow::btnReaderSearch_clicked);
+    connect(ui->btnBookSearch, &QPushButton::clicked, this, &MainWindow::btnBookSearch_clicked);
 
     connect(ui->btnReaderAdd, &QPushButton::clicked, this, &MainWindow::btnReaderAdd_clicked);
     connect(ui->btnReaderRemove, &QPushButton::clicked, this, &MainWindow::btnReaderRemove_clicked);
     connect(ui->btnClearReaders, &QPushButton::clicked, this, &MainWindow::btnClearReaders_clicked);
+    connect(ui->btnReaderSearch, &QPushButton::clicked, this, &MainWindow::btnReaderSearch_clicked);
 
     connect(ui->btnEntryCheckOut, &QPushButton::clicked, this, &MainWindow::btnEntryCheckOut_clicked);
     connect(ui->btnEntryCheckIn, &QPushButton::clicked, this, &MainWindow::btnEntryCheckIn_clicked);
@@ -193,6 +194,12 @@ void MainWindow::updateTableWidgets() {
 
 void MainWindow::btnReaderSearch_clicked() {
     SearchReaderDialog *dialog = new SearchReaderDialog(this);
+    dialog->exec();
+    delete dialog;
+}
+
+void MainWindow::btnBookSearch_clicked() {
+    SearchBookDialog *dialog = new SearchBookDialog(this);
     dialog->exec();
     delete dialog;
 }

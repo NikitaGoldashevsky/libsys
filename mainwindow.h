@@ -11,6 +11,7 @@
 #include "addentrydialog.h"
 #include "closeentrydialog.h"
 #include "searchreaderdialog.h"
+#include "searchbookdialog.h"
 
 #include "BooksT.h"
 #include "ReadersHT.h"
@@ -32,6 +33,7 @@ public:
     ReadersHT* getReadersHT();
     BooksT* getBooksT();
     EntriesL *getEntriesL();
+    void btnBookSearch_clicked();
 private:
     Ui::MainWindow *ui;
     BooksT books = BooksT();

@@ -119,7 +119,7 @@ public:
 
     void retranslateUi(QDialog *AddReaderDialog)
     {
-        AddReaderDialog->setWindowTitle(QCoreApplication::translate("AddReaderDialog", "Dialog", nullptr));
+        AddReaderDialog->setWindowTitle(QCoreApplication::translate("AddReaderDialog", "\320\224\320\276\320\261\320\260\320\262\320\273\320\265\320\275\320\270\320\265 \321\207\320\270\321\202\320\260\321\202\320\265\320\273\321\217", nullptr));
         label_5->setText(QCoreApplication::translate("AddReaderDialog", "\320\234\320\265\321\201\321\202\320\276 \321\200\320\260\320\261\320\276\321\202\321\213", nullptr));
         label->setText(QCoreApplication::translate("AddReaderDialog", "\320\235\320\276\320\274\320\265\321\200 \320\261\320\270\320\273\320\265\321\202\320\260", nullptr));
         label_4->setText(QCoreApplication::translate("AddReaderDialog", "\320\220\320\264\321\200\320\265\321\201 \320\277\321\200\320\276\320\266\320\270\320\262\320\260\320\275\320\270\321\217", nullptr));

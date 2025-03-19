@@ -93,7 +93,7 @@ public:
 
     void retranslateUi(QDialog *AddEntryDialog)
     {
-        AddEntryDialog->setWindowTitle(QCoreApplication::translate("AddEntryDialog", "Dialog", nullptr));
+        AddEntryDialog->setWindowTitle(QCoreApplication::translate("AddEntryDialog", "\320\222\321\213\320\264\320\260\321\207\320\260 \320\272\320\275\320\270\320\263\320\270", nullptr));
         label->setText(QCoreApplication::translate("AddEntryDialog", "\320\235\320\276\320\274\320\265\321\200 \320\261\320\270\320\273\320\265\321\202\320\260", nullptr));
         deCheckOutDate->setDisplayFormat(QCoreApplication::translate("AddEntryDialog", "dd.MM.yyyy", nullptr));
         label_2->setText(QCoreApplication::translate("AddEntryDialog", "\320\250\320\270\321\204\321\200", nullptr));

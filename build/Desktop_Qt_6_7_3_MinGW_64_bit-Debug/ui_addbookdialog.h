@@ -157,7 +157,7 @@ public:
 
     void retranslateUi(QDialog *AddBookDialog)
     {
-        AddBookDialog->setWindowTitle(QCoreApplication::translate("AddBookDialog", "Dialog", nullptr));
+        AddBookDialog->setWindowTitle(QCoreApplication::translate("AddBookDialog", "\320\224\320\276\320\261\320\260\320\262\320\273\320\265\320\275\320\270\320\265 \320\272\320\275\320\270\320\263\320\270", nullptr));
         label_5->setText(QCoreApplication::translate("AddBookDialog", "\320\223\320\276\320\264 \320\277\321\203\320\261\320\273\320\270\320\272\320\260\321\206\320\270\320\270", nullptr));
         label_6->setText(QCoreApplication::translate("AddBookDialog", "\320\232\320\276\320\277\320\270\320\271 \320\262\321\201\320\265\320\263\320\276", nullptr));
         label_2->setText(QCoreApplication::translate("AddBookDialog", "\320\220\320\262\321\202\320\276\321\200\321\213", nullptr));

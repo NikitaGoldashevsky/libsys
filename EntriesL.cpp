@@ -112,6 +112,23 @@ bool EntriesL::has(const std::string& card, const std::string& cipher) const {
     return false;
 }
 
+std::string EntriesL::getCardsByCipher(const std::string& cipher, bool notReturned) const {
+    std::string result;
+    Entry* current = head;
+    while (current) {
+        if (current->cipher == cipher) {
+            if (!notReturned || (notReturned && (current->returnDate == "-"))) {
+                if (!result.empty()) {
+                    result += " ";
+                }
+                result += current->card;
+            }
+        }
+        current = current->next;
+    }
+    return result;
+}
+
 std::string EntriesL::getCiphersByCard(const std::string& card) const {
     std::string result;
     Entry* current = head;

@@ -214,26 +214,67 @@ void BooksT::printTraversalListR(Node* cur, const char* sep) {
     printTraversalListR(cur->right, sep);
 }
 
-void BooksT::fillTableWidget(QTableWidget* tableWidget) {
+void BooksT::fillTableWidget(QTableWidget* tableWidget, const std::string& filter) {
     if (!tableWidget) return;
 
     tableWidget->setRowCount(0);
     int row = 0;
 
+    auto toLower = [](const std::string& str) {
+        std::string lowerStr = str;
+        std::transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
+        return lowerStr;
+    };
+
+    // Case-insensitive Boyer–Moore search
+    auto boyerMooreSearch = [&](const std::string& text, const std::string& pattern) -> bool {
+        if (pattern.empty()) return true;
+
+        std::string lowerText = toLower(text);
+        std::string lowerPattern = toLower(pattern);
+
+        int m = lowerPattern.size();
+        int n = lowerText.size();
+        if (m > n) return false;
+
+        int badChar[256];
+        for (int i = 0; i < 256; ++i)
+            badChar[i] = -1;
+        for (int i = 0; i < m; ++i)
+            badChar[(unsigned char)lowerPattern[i]] = i;
+
+        int s = 0;
+        while (s <= n - m) {
+            int j = m - 1;
+            while (j >= 0 && lowerPattern[j] == lowerText[s + j])
+                j--;
+            if (j < 0) {
+                return true;
+            } else {
+                s += std::max(1, j - badChar[(unsigned char)lowerText[s + j]]);
+            }
+        }
+        return false;
+    };
+
     std::function<void(Node*)> traverseAndFill = [&](Node* cur) {
         if (!cur) return;
         traverseAndFill(cur->left);
 
-        tableWidget->insertRow(row);
-        tableWidget->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(cur->book->cipher)));
-        tableWidget->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(cur->book->authors)));
-        tableWidget->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(cur->book->name)));
-        tableWidget->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(cur->book->publisher)));
-        tableWidget->setItem(row, 4, new QTableWidgetItem(QString::number(cur->book->pubYear)));
-        tableWidget->setItem(row, 5, new QTableWidgetItem(QString::number(cur->book->copiesAll)));
-        tableWidget->setItem(row, 6, new QTableWidgetItem(QString::number(cur->book->copiesStock)));
+        if (filter.empty() ||
+            boyerMooreSearch(cur->book->name, filter) ||
+            boyerMooreSearch(cur->book->authors, filter)) {
 
-        row++;
+            tableWidget->insertRow(row);
+            tableWidget->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(cur->book->cipher)));
+            tableWidget->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(cur->book->authors)));
+            tableWidget->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(cur->book->name)));
+            tableWidget->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(cur->book->publisher)));
+            tableWidget->setItem(row, 4, new QTableWidgetItem(QString::number(cur->book->pubYear)));
+            tableWidget->setItem(row, 5, new QTableWidgetItem(QString::number(cur->book->copiesAll)));
+            tableWidget->setItem(row, 6, new QTableWidgetItem(QString::number(cur->book->copiesStock)));
+            row++;
+        }
         traverseAndFill(cur->right);
     };
 

@@ -30,6 +30,7 @@ public:
     void fillTableWidget(QTableWidget *tableWidget);
     void sort();
     void remove(const std::string &card, const std::string &cipher);
+    std::string getCardsByCipher(const std::string &cipher, bool notReturned = false) const;
 private:
     Entry* head;
     Entry* tail;

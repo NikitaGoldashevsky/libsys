@@ -74,7 +74,7 @@ public:
 
     void retranslateUi(QDialog *removebookdialog)
     {
-        removebookdialog->setWindowTitle(QCoreApplication::translate("removebookdialog", "Dialog", nullptr));
+        removebookdialog->setWindowTitle(QCoreApplication::translate("removebookdialog", "\320\243\320\264\320\260\320\273\320\265\320\275\320\270\320\265 \320\272\320\275\320\270\320\263\320\270", nullptr));
         label->setText(QCoreApplication::translate("removebookdialog", "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \321\210\320\270\321\204\321\200 \320\272\320\275\320\270\320\263\320\270, \320\277\320\276\320\264\320\273\320\265\320\266\320\260\321\211\320\265\320\271 \321\203\320\264\320\260\320\273\320\265\320\275\320\270\321\216", nullptr));
     } // retranslateUi
 

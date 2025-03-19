@@ -20,6 +20,7 @@ SOURCES += \
     mainwindow.cpp \
     removebookdialog.cpp \
     removereaderdialog.cpp \
+    searchbookdialog.cpp \
     searchreaderdialog.cpp
 
 HEADERS += \
@@ -36,6 +37,7 @@ HEADERS += \
     mainwindow.h \
     removebookdialog.h \
     removereaderdialog.h \
+    searchbookdialog.h \
     searchreaderdialog.h
 
 FORMS += \
@@ -46,6 +48,7 @@ FORMS += \
     mainwindow.ui \
     removebookdialog.ui \
     removereaderdialog.ui \
+    searchbookdialog.ui \
     searchreaderdialog.ui
 
 # Default rules for deployment.

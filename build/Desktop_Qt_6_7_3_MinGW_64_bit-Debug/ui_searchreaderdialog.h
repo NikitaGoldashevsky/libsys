@@ -101,7 +101,7 @@ public:
 
     void retranslateUi(QDialog *SearchReaderDialog)
     {
-        SearchReaderDialog->setWindowTitle(QCoreApplication::translate("SearchReaderDialog", "Dialog", nullptr));
+        SearchReaderDialog->setWindowTitle(QCoreApplication::translate("SearchReaderDialog", "\320\237\320\276\320\270\321\201\320\272 \321\207\320\270\321\202\320\260\321\202\320\265\320\273\320\265\320\271", nullptr));
         rbByCard->setText(QCoreApplication::translate("SearchReaderDialog", "\320\237\320\276 \320\275\320\276\320\274\320\265\321\200\321\203 \320\261\320\270\320\273\320\265\321\202\320\260", nullptr));
         rbByFIO->setText(QCoreApplication::translate("SearchReaderDialog", "\320\237\320\276 \320\244\320\230\320\236", nullptr));
         leInput->setPlaceholderText(QString());
