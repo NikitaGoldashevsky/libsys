@@ -66,7 +66,7 @@ public:
     QVBoxLayout *verticalLayout_9;
     QPushButton *btnEntryCheckOut;
     QPushButton *btnEntryCheckIn;
-    QPushButton *btnEntrySearch;
+    QSpacerItem *verticalSpacer;
     QHBoxLayout *horizontalLayout_6;
     QPushButton *btnClearEntries;
     QSpacerItem *horizontalSpacer;
@@ -99,6 +99,10 @@ public:
         verticalLayout_4->setObjectName("verticalLayout_4");
         label_3 = new QLabel(verticalLayoutWidget_6);
         label_3->setObjectName("label_3");
+        QFont font;
+        font.setPointSize(12);
+        font.setBold(true);
+        label_3->setFont(font);
 
         verticalLayout_4->addWidget(label_3);
 
@@ -119,16 +123,28 @@ public:
         verticalLayout_6->setObjectName("verticalLayout_6");
         btnBookAdd = new QPushButton(verticalLayoutWidget_6);
         btnBookAdd->setObjectName("btnBookAdd");
+        QSizePolicy sizePolicy1(QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(btnBookAdd->sizePolicy().hasHeightForWidth());
+        btnBookAdd->setSizePolicy(sizePolicy1);
+        btnBookAdd->setMinimumSize(QSize(0, 28));
 
         verticalLayout_6->addWidget(btnBookAdd);
 
         btnBookRemove = new QPushButton(verticalLayoutWidget_6);
         btnBookRemove->setObjectName("btnBookRemove");
+        sizePolicy1.setHeightForWidth(btnBookRemove->sizePolicy().hasHeightForWidth());
+        btnBookRemove->setSizePolicy(sizePolicy1);
+        btnBookRemove->setMinimumSize(QSize(0, 28));
 
         verticalLayout_6->addWidget(btnBookRemove);
 
         btnBookSearch = new QPushButton(verticalLayoutWidget_6);
         btnBookSearch->setObjectName("btnBookSearch");
+        sizePolicy1.setHeightForWidth(btnBookSearch->sizePolicy().hasHeightForWidth());
+        btnBookSearch->setSizePolicy(sizePolicy1);
+        btnBookSearch->setMinimumSize(QSize(0, 28));
 
         verticalLayout_6->addWidget(btnBookSearch);
 
@@ -145,6 +161,9 @@ public:
         horizontalLayout_4->setObjectName("horizontalLayout_4");
         btnClearBooks = new QPushButton(verticalLayoutWidget_6);
         btnClearBooks->setObjectName("btnClearBooks");
+        sizePolicy1.setHeightForWidth(btnClearBooks->sizePolicy().hasHeightForWidth());
+        btnClearBooks->setSizePolicy(sizePolicy1);
+        btnClearBooks->setMinimumSize(QSize(0, 30));
 
         horizontalLayout_4->addWidget(btnClearBooks);
 
@@ -163,6 +182,7 @@ public:
 
         label_2 = new QLabel(verticalLayoutWidget_6);
         label_2->setObjectName("label_2");
+        label_2->setFont(font);
 
         verticalLayout->addWidget(label_2);
 
@@ -183,16 +203,25 @@ public:
         verticalLayout_3->setObjectName("verticalLayout_3");
         btnReaderAdd = new QPushButton(verticalLayoutWidget_6);
         btnReaderAdd->setObjectName("btnReaderAdd");
+        sizePolicy1.setHeightForWidth(btnReaderAdd->sizePolicy().hasHeightForWidth());
+        btnReaderAdd->setSizePolicy(sizePolicy1);
+        btnReaderAdd->setMinimumSize(QSize(0, 28));
 
         verticalLayout_3->addWidget(btnReaderAdd);
 
         btnReaderRemove = new QPushButton(verticalLayoutWidget_6);
         btnReaderRemove->setObjectName("btnReaderRemove");
+        sizePolicy1.setHeightForWidth(btnReaderRemove->sizePolicy().hasHeightForWidth());
+        btnReaderRemove->setSizePolicy(sizePolicy1);
+        btnReaderRemove->setMinimumSize(QSize(0, 28));
 
         verticalLayout_3->addWidget(btnReaderRemove);
 
         btnReaderSearch = new QPushButton(verticalLayoutWidget_6);
         btnReaderSearch->setObjectName("btnReaderSearch");
+        sizePolicy1.setHeightForWidth(btnReaderSearch->sizePolicy().hasHeightForWidth());
+        btnReaderSearch->setSizePolicy(sizePolicy1);
+        btnReaderSearch->setMinimumSize(QSize(0, 28));
 
         verticalLayout_3->addWidget(btnReaderSearch);
 
@@ -209,6 +238,9 @@ public:
         horizontalLayout_5->setObjectName("horizontalLayout_5");
         btnClearReaders = new QPushButton(verticalLayoutWidget_6);
         btnClearReaders->setObjectName("btnClearReaders");
+        sizePolicy1.setHeightForWidth(btnClearReaders->sizePolicy().hasHeightForWidth());
+        btnClearReaders->setSizePolicy(sizePolicy1);
+        btnClearReaders->setMinimumSize(QSize(0, 30));
 
         horizontalLayout_5->addWidget(btnClearReaders);
 
@@ -227,6 +259,7 @@ public:
 
         label_4 = new QLabel(verticalLayoutWidget_6);
         label_4->setObjectName("label_4");
+        label_4->setFont(font);
 
         verticalLayout_7->addWidget(label_4);
 
@@ -247,18 +280,23 @@ public:
         verticalLayout_9->setObjectName("verticalLayout_9");
         btnEntryCheckOut = new QPushButton(verticalLayoutWidget_6);
         btnEntryCheckOut->setObjectName("btnEntryCheckOut");
+        sizePolicy1.setHeightForWidth(btnEntryCheckOut->sizePolicy().hasHeightForWidth());
+        btnEntryCheckOut->setSizePolicy(sizePolicy1);
+        btnEntryCheckOut->setMinimumSize(QSize(0, 28));
 
         verticalLayout_9->addWidget(btnEntryCheckOut);
 
         btnEntryCheckIn = new QPushButton(verticalLayoutWidget_6);
         btnEntryCheckIn->setObjectName("btnEntryCheckIn");
+        sizePolicy1.setHeightForWidth(btnEntryCheckIn->sizePolicy().hasHeightForWidth());
+        btnEntryCheckIn->setSizePolicy(sizePolicy1);
+        btnEntryCheckIn->setMinimumSize(QSize(0, 28));
 
         verticalLayout_9->addWidget(btnEntryCheckIn);
 
-        btnEntrySearch = new QPushButton(verticalLayoutWidget_6);
-        btnEntrySearch->setObjectName("btnEntrySearch");
+        verticalSpacer = new QSpacerItem(20, 50, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Fixed);
 
-        verticalLayout_9->addWidget(btnEntrySearch);
+        verticalLayout_9->addItem(verticalSpacer);
 
 
         horizontalLayout_3->addLayout(verticalLayout_9);
@@ -273,6 +311,7 @@ public:
         horizontalLayout_6->setObjectName("horizontalLayout_6");
         btnClearEntries = new QPushButton(verticalLayoutWidget_6);
         btnClearEntries->setObjectName("btnClearEntries");
+        btnClearEntries->setMinimumSize(QSize(0, 30));
 
         horizontalLayout_6->addWidget(btnClearEntries);
 
@@ -300,8 +339,7 @@ public:
         QWidget::setTabOrder(btnReaderSearch, btnClearReaders);
         QWidget::setTabOrder(btnClearReaders, btnEntryCheckOut);
         QWidget::setTabOrder(btnEntryCheckOut, btnEntryCheckIn);
-        QWidget::setTabOrder(btnEntryCheckIn, btnEntrySearch);
-        QWidget::setTabOrder(btnEntrySearch, twBooks);
+        QWidget::setTabOrder(btnEntryCheckIn, twBooks);
         QWidget::setTabOrder(twBooks, twReaders);
         QWidget::setTabOrder(twReaders, btnClearEntries);
         QWidget::setTabOrder(btnClearEntries, twEntries);
@@ -327,7 +365,6 @@ public:
         label_4->setText(QCoreApplication::translate("MainWindow", "\320\222\321\213\320\264\320\260\321\207\320\260/\320\277\321\200\320\270\320\265\320\274 \320\272\320\275\320\270\320\263", nullptr));
         btnEntryCheckOut->setText(QCoreApplication::translate("MainWindow", "\320\222\321\213\320\264\320\260\321\202\321\214", nullptr));
         btnEntryCheckIn->setText(QCoreApplication::translate("MainWindow", "\320\237\321\200\320\270\320\275\321\217\321\202\321\214", nullptr));
-        btnEntrySearch->setText(QCoreApplication::translate("MainWindow", "\320\237\320\276\320\270\321\201\320\272", nullptr));
         btnClearEntries->setText(QCoreApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 \320\264\320\260\320\275\320\275\321\213\320\265", nullptr));
     } // retranslateUi
 

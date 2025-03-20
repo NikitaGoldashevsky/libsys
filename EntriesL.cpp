@@ -21,7 +21,7 @@ void EntriesL::add(const std::string& card, const std::string& cipher, const std
 Entry* EntriesL::get(const std::string& card, const std::string& cipher) {
     Entry* current = head;
     while (current) {
-        if (current->card == card && current->cipher == cipher) {
+        if (current->card == card && current->cipher == cipher && current->returnDate == NOT_RETURNED) {
             return current;
         }
         current = current->next;
@@ -104,7 +104,7 @@ int EntriesL::size() const {
 bool EntriesL::has(const std::string& card, const std::string& cipher) const {
     Entry* current = head;
     while (current) {
-        if (current->card == card && current->cipher == cipher) {
+        if (current->card == card && current->cipher == cipher && current->returnDate == NOT_RETURNED) {
             return true;
         }
         current = current->next;
@@ -117,7 +117,7 @@ std::string EntriesL::getCardsByCipher(const std::string& cipher, bool notReturn
     Entry* current = head;
     while (current) {
         if (current->cipher == cipher) {
-            if (!notReturned || (notReturned && (current->returnDate == "-"))) {
+            if (!notReturned || (notReturned && (current->returnDate == NOT_RETURNED))) {
                 if (!result.empty()) {
                     result += " ";
                 }

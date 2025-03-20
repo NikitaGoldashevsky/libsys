@@ -3,7 +3,9 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow),
+    regexCard(R"(^\d\d\d\d-\d\d$)"),
+    regexCipher(R"(^\d{2}[1-9]\.\d{2}[1-9]$)")
 {
     ui->setupUi(this);
     ui->btnBookAdd->setFocus();
@@ -46,22 +48,49 @@ MainWindow::~MainWindow() {
 
 void MainWindow::btnBookAdd_clicked() {
     AddBookDialog d(this);
-    if (d.exec() == QDialog::Accepted) {
-        if (d.getCipher() == "") {
-            QMessageBox::critical(this, "Ошибка", "Введенный шифр некорректен!");
-            return;
-        }
+    while (true) {
+        if (d.exec() == QDialog::Accepted) {
+            if (!std::regex_search(d.getCipher(), regexCipher)) {
+                QMessageBox::critical(this, "Ошибка", "Введенный шифр некорректен!");
+                continue;
+            }
 
-        if (!books.has(d.getCipher()))
-        books.add(new Book{
-            d.getCipher(), d.getAuthors(), d.getName(), d.getPublisher(),
-            d.getPublicationYear(), d.getCopiesAll(), d.getCopiesStock()
-        });
+            if (d.getCopiesAll() < 1 || (d.getCopiesStock() > d.getCopiesAll())) {
+                QMessageBox::critical(this, "Ошибка", "Указано некорректное число экземпляров!");
+                continue;
+            }
+
+            if (d.getName().empty()) {
+                QMessageBox::critical(this, "Ошибка", "Не указаны авторы книги!");
+                continue;
+            }
+
+            if (d.getName().empty()) {
+                QMessageBox::critical(this, "Ошибка", "Не указано название книги!");
+                continue;
+            }
+
+            if (d.getPublisher().empty()) {
+                QMessageBox::critical(this, "Ошибка", "Не указан издатель!");
+                continue;
+            }
+
+            if (!books.has(d.getCipher())) {
+                books.add(new Book{
+                    d.getCipher(), d.getAuthors(), d.getName(), d.getPublisher(),
+                    d.getPublicationYear(), d.getCopiesAll(), d.getCopiesStock()
+                });
+                updateTableWidgets();
+                return;
+            }
+            else {
+                QMessageBox::critical(this, "Ошибка", "Книга с указанным шифром уже есть в базе данных!");
+                continue;
+            }
+        }
         else {
-            QMessageBox::critical(this, "Ошибка", "Книга с указанным шифром уже есть в базе данных!");
             return;
         }
-        updateTableWidgets();
     }
 }
 
@@ -102,21 +131,49 @@ void MainWindow::btnClearBooks_clicked() {
 
 void MainWindow::btnReaderAdd_clicked() {
     AddReaderDialog d(this);
-    if (d.exec() == QDialog::Accepted) {
-        if (d.getCard() == "") {
-            QMessageBox::critical(this, "Ошибка", "Введенный номер билета некорректен!");
-            return;
-        }
 
-        if (!readers.has(d.getCard()))
-            readers.add(new Reader{
-                d.getCard(), d.getFIO(), d.getBirthYear(),
-                d.getAddress(), d.getWorkplace()});
-        else {
-            QMessageBox::critical(this, "Ошибка", "Читатель с указанным номером билета уже есть в базе данных!");
+    const auto isValidFirstChar = [](const std::string& str) -> bool {
+        if (str.empty()) return false;
+        char firstChar = str[0];
+        return (firstChar == '\xD0' && (str[1] == '\xA7' || str[1] == '\x90' || str[1] == '\x92'));
+    };
+
+    while (true) {
+        if (d.exec() == QDialog::Accepted) {
+            if (!std::regex_search(d.getCard().erase(0, 2), regexCard) || !isValidFirstChar(d.getCard())) {
+                QMessageBox::critical(this, "Ошибка", "Указанный номер билета некорректен!");
+                continue;
+            }
+
+            if (d.getFIO().empty()) {
+                QMessageBox::critical(this, "Ошибка", "Не указаны ФИО читателя!");
+                continue;
+            }
+
+            if (d.getAddress().empty()) {
+                QMessageBox::critical(this, "Ошибка", "Не указан адрес проживания читателя!");
+                continue;
+            }
+
+            if (d.getWorkplace().empty()) {
+                QMessageBox::critical(this, "Ошибка", "Не указано место работы читателя!");
+                continue;
+            }
+
+            if (!readers.has(d.getCard())) {
+                readers.add(new Reader{
+                    d.getCard(), d.getFIO(), d.getBirthYear(),
+                    d.getAddress(), d.getWorkplace()});
+                updateTableWidgets();
+                return;
+            }
+            else {
+                QMessageBox::critical(this, "Ошибка", "Читатель с указанным номером билета уже есть в базе данных!");
+                continue;
+            }
+        } else {
             return;
         }
-        updateTableWidgets();
     }
 }
 
@@ -127,47 +184,79 @@ void MainWindow::btnClearReaders_clicked() {
 
 void MainWindow::btnEntryCheckIn_clicked() {
     CloseEntryDialog d(this);
-    if (d.exec() == QDialog::Accepted) {
-        // // error handling
-        // if (d.getCard() == "") {
-        //     QMessageBox::critical(this, "Ошибка", "Введенный номер билета некорректен!");
-        //     return;
-        // }
+    while (true) {
+        if (d.exec() == QDialog::Accepted) {
+            const std::string card = d.getCard();
+            const std::string cipher = d.getCipher();
 
-        if (entries.has(d.getCard(), d.getCipher()))
-            entries.get(d.getCard(), d.getCipher())->returnDate = d.getCheckInDate();
+            if (!readers.has(card)) {
+                QMessageBox::critical(this, "Ошибка", "Указанный номер билета не соответствует ни одному читателю!");
+                continue;
+            }
+
+            if (!books.has(cipher)) {
+                QMessageBox::critical(this, "Ошибка", "Указанный шифр не соответствует ни одной книге!");
+                continue;
+            }
+
+            Entry* const entry = entries.get(d.getCard(), d.getCipher());
+            if (entry) {
+                entry->returnDate = d.getCheckInDate();
+                books.get(entry->cipher)->copiesStock++;
+                updateTableWidgets();
+                return;
+            }
+            else {
+                QMessageBox::critical(this, "Ошибка", "Читатель с указанным номером билета не имеет"
+                                                      " книгу с указанным шифром!");
+                continue;
+            }
+        }
         else {
-            QMessageBox::critical(this, "Ошибка", "Запись с указанными номером билета"
-                                                  " и шифром отсутствует в базе данных!");
             return;
         }
     }
-    updateTableWidgets();
 }
 
 void MainWindow::btnEntryCheckOut_clicked() {
     AddEntryDialog d(this);
-    if (d.exec() == QDialog::Accepted) {
-        const std::string card = d.getCard();
-        const std::string cipher = d.getCipher();
+    while (true) {
+        if (d.exec() == QDialog::Accepted) {
+            const std::string card = d.getCard();
+            const std::string cipher = d.getCipher();
+            Book* const book = books.get(cipher);
 
-        if (!readers.has(card)) {
-            QMessageBox::critical(this, "Ошибка", "Указанный номер билета не соответствует ни одному читалелю!");
-            return;
-        } else if (!books.has(cipher)) {
-            QMessageBox::critical(this, "Ошибка", "Указанный шифр не соответствует ни одной книге!");
+            if (!readers.has(card)) {
+                QMessageBox::critical(this, "Ошибка", "Указанный номер билета не соответствует ни одному читателю!");
+                continue;
+            }
+
+            if (!books.has(cipher)) {
+                QMessageBox::critical(this, "Ошибка", "Указанный шифр не соответствует ни одной книге!");
+                continue;
+            }
+
+            Entry* const entry = entries.get(card, cipher);
+            if (entry) {
+                QMessageBox::critical(this, "Ошибка", "Читатель с указанным номером билета"
+                                                      " уже имеет книгу с указанным шифром!");
+                continue;
+            }
+
+            if (book->copiesStock < 1) {
+                QMessageBox::critical(this, "Ошибка", "Экземпляров указанной книги не осталось в наличии!");
+                continue;
+            }
+
+            entries.add(card, cipher, d.getCheckOutDate(), NOT_RETURNED);
+            book->copiesStock--;
+            updateTableWidgets();
             return;
         }
-
-        if (!entries.has(card, cipher))
-            entries.add(card, cipher, d.getCheckOutDate(), "-");
         else {
-            QMessageBox::critical(this, "Ошибка", "Запись с указанными номером билета"
-                                                  " и шифром уже есть в базе данных!");
             return;
         }
     }
-    updateTableWidgets();
 }
 
 void MainWindow::btnClearEntries_clicked() {

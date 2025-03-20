@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QMessageBox>
+#include <regex>
+#include <string>
 
 #include "addbookdialog.h"
 #include "removebookdialog.h"
@@ -41,6 +43,9 @@ private:
     EntriesL entries = EntriesL();
 
     void updateTableWidgets();
+
+    const std::regex regexCard;
+    const std::regex regexCipher;
 private slots:
     void btnBookAdd_clicked();
     void btnBookRemove_clicked();

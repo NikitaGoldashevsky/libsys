@@ -5,6 +5,8 @@
 #include <QDebug>
 #include <QTableWidget>
 
+const static std::string NOT_RETURNED = "-";
+
 struct Entry {
     Entry* next;
     Entry* prev;
