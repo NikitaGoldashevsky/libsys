@@ -99,14 +99,22 @@ void MainWindow::btnBookRemove_clicked() {
     if (d.exec() == QDialog::Accepted) {
         const std::string cipher = d.getCipher();
         if (books.has(cipher)) {
-            books.remove(cipher);
+            const std::string cards = entries.getCardsByCipher(cipher, true);
+            if (!cards.empty()) {
+                std::string msg = "Удаление невозможно. Следующие читатели имеют экземпляры указанной книги: ";
+                msg += cards;
+                QMessageBox::critical(this, "Ошибка", QString::fromStdString(msg));
+                return;
+            } else {
+                books.remove(cipher);
+                entries.removeAllByCipher(cipher);
+                updateTableWidgets();
+            }
         } else {
             QMessageBox::critical(this, "Ошибка", "Книги с указанным шифром нет в базе данных!");
             return;
         }
     }
-
-    updateTableWidgets();
 }
 
 void MainWindow::btnReaderRemove_clicked() {
@@ -114,14 +122,22 @@ void MainWindow::btnReaderRemove_clicked() {
     if (d.exec() == QDialog::Accepted) {
         const std::string card = d.getCard();
         if (readers.has(card)) {
-            readers.remove(card);
+            const std::string ciphers = entries.getCiphersByCard(card, true);
+            if (!ciphers.empty()) {
+                std::string msg = "Удаление невозможно. Читатель имеет невозвращенные экземпляры следующих книг: ";
+                msg += ciphers;
+                QMessageBox::critical(this, "Ошибка", QString::fromStdString(msg));
+                return;
+            } else {
+                readers.remove(card);
+                entries.removeAllByCard(card);
+                updateTableWidgets();
+            }
         } else {
             QMessageBox::critical(this, "Ошибка", "Читателя с указанным номером билета нет в базе данных!");
             return;
         }
     }
-
-    updateTableWidgets();
 }
 
 void MainWindow::btnClearBooks_clicked() {

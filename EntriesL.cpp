@@ -129,19 +129,71 @@ std::string EntriesL::getCardsByCipher(const std::string& cipher, bool notReturn
     return result;
 }
 
-std::string EntriesL::getCiphersByCard(const std::string& card) const {
+std::string EntriesL::getCiphersByCard(const std::string& card, bool notReturned) const {
     std::string result;
     Entry* current = head;
     while (current) {
         if (current->card == card) {
-            if (!result.empty()) {
-                result += " ";
+            if (!notReturned || (notReturned && (current->returnDate == NOT_RETURNED))) {
+                if (!result.empty()) {
+                    result += " ";
+                }
+                result += current->cipher;
             }
-            result += current->cipher;
         }
         current = current->next;
     }
     return result;
+}
+
+void EntriesL::removeAllByCard(const std::string& card) {
+    Entry* current = head;
+    Entry* toDelete = nullptr;
+
+    while (current) {
+        if (current->card == card) {
+            toDelete = current;
+            Entry* pNext = current->next;
+            Entry* pPrev = current->prev;
+            if (pPrev) {
+                pPrev->next = pNext;
+            } else {
+                head = pNext;
+            }
+            if (pNext) {
+                pNext->prev = pPrev;
+            }
+            delete toDelete;
+            current = pNext;
+        } else {
+            current = current->next;
+        }
+    }
+}
+
+void EntriesL::removeAllByCipher(const std::string& cipher) {
+    Entry* current = head;
+    Entry* toDelete = nullptr;
+
+    while (current) {
+        if (current->cipher == cipher) {
+            toDelete = current;
+            Entry* pNext = current->next;
+            Entry* pPrev = current->prev;
+            if (pPrev) {
+                pPrev->next = pNext;
+            } else {
+                head = pNext;
+            }
+            if (pNext) {
+                pNext->prev = pPrev;
+            }
+            delete toDelete;
+            current = pNext;
+        } else {
+            current = current->next;
+        }
+    }
 }
 
 void EntriesL::fillTableWidget(QTableWidget* tableWidget) {

@@ -53,7 +53,12 @@ void SearchReaderDialog::btnSearch_clicked() {
             ui->twReaders->setItem(0, 2, new QTableWidgetItem(QString::number(reader->birthYear)));
             ui->twReaders->setItem(0, 3, new QTableWidgetItem(QString::fromStdString(reader->address)));
             ui->twReaders->setItem(0, 4, new QTableWidgetItem(QString::fromStdString(reader->workplace)));
-            ui->twReaders->setItem(0, 5, new QTableWidgetItem(QString::fromStdString(entries->getCiphersByCard(reader->card))));
+
+            std::string ciphersString = entries->getCiphersByCard(reader->card, true);
+            if (ciphersString.empty()) {
+                ciphersString = "-";
+            }
+            ui->twReaders->setItem(0, 5, new QTableWidgetItem(QString::fromStdString(ciphersString)));
         }
         for (int column = 0; column < ui->twReaders->columnCount(); ++column) {
             ui->twReaders->resizeColumnToContents(column);

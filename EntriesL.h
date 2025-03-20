@@ -28,11 +28,13 @@ public:
     void clear();
     int size() const;
     bool has(const std::string& card, const std::string& cipher) const;
-    std::string getCiphersByCard(const std::string& card) const;
+    std::string getCiphersByCard(const std::string& card, bool notReturned = false) const;
     void fillTableWidget(QTableWidget *tableWidget);
     void sort();
     void remove(const std::string &card, const std::string &cipher);
     std::string getCardsByCipher(const std::string &cipher, bool notReturned = false) const;
+    void removeAllByCard(const std::string &card);
+    void removeAllByCipher(const std::string &cipher);
 private:
     Entry* head;
     Entry* tail;
