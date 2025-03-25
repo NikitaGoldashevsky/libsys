@@ -16,6 +16,7 @@ SOURCES += \
     addentrydialog.cpp \
     addreaderdialog.cpp \
     closeentrydialog.cpp \
+    dialogfactory.cpp \
     main.cpp \
     mainwindow.cpp \
     removebookdialog.cpp \
@@ -34,6 +35,7 @@ HEADERS += \
     addentrydialog.h \
     addreaderdialog.h \
     closeentrydialog.h \
+    dialogfactory.h \
     mainwindow.h \
     removebookdialog.h \
     removereaderdialog.h \

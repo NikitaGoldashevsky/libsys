@@ -47,40 +47,47 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::btnBookAdd_clicked() {
-    AddBookDialog d(this);
+    // Create a dialog factory
+    AddBookDialogFactory factory;
+
+    // Use the factory to create a dialog
+    QDialog* dialogPtr = factory.createDialog(this);
+    AddBookDialog* d = static_cast<AddBookDialog*>(dialogPtr);
+
     while (true) {
-        if (d.exec() == QDialog::Accepted) {
-            if (!std::regex_search(d.getCipher(), regexCipher)) {
+        if (d->exec() == QDialog::Accepted) {
+            if (!std::regex_search(d->getCipher(), regexCipher)) {
                 QMessageBox::critical(this, "Ошибка", "Введенный шифр некорректен!");
                 continue;
             }
 
-            if (d.getCopiesAll() < 1 || (d.getCopiesStock() > d.getCopiesAll())) {
+            if (d->getCopiesAll() < 1 || (d->getCopiesStock() > d->getCopiesAll())) {
                 QMessageBox::critical(this, "Ошибка", "Указано некорректное число экземпляров!");
                 continue;
             }
 
-            if (d.getName().empty()) {
+            if (d->getName().empty()) {
                 QMessageBox::critical(this, "Ошибка", "Не указаны авторы книги!");
                 continue;
             }
 
-            if (d.getName().empty()) {
+            if (d->getName().empty()) {
                 QMessageBox::critical(this, "Ошибка", "Не указано название книги!");
                 continue;
             }
 
-            if (d.getPublisher().empty()) {
+            if (d->getPublisher().empty()) {
                 QMessageBox::critical(this, "Ошибка", "Не указан издатель!");
                 continue;
             }
 
-            if (!books.has(d.getCipher())) {
+            if (!books.has(d->getCipher())) {
                 books.add(new Book{
-                    d.getCipher(), d.getAuthors(), d.getName(), d.getPublisher(),
-                    d.getPublicationYear(), d.getCopiesAll(), d.getCopiesStock()
+                    d->getCipher(), d->getAuthors(), d->getName(), d->getPublisher(),
+                    d->getPublicationYear(), d->getCopiesAll(), d->getCopiesStock()
                 });
                 updateTableWidgets();
+                delete dialogPtr;
                 return;
             }
             else {
@@ -89,6 +96,7 @@ void MainWindow::btnBookAdd_clicked() {
             }
         }
         else {
+            delete dialogPtr;
             return;
         }
     }
@@ -141,7 +149,12 @@ void MainWindow::btnReaderRemove_clicked() {
 }
 
 void MainWindow::btnClearBooks_clicked() {
+    QMessageBox::information(this, "Внимание",
+                             "В целях обеспечения корректности информации, будет очищена вся база данных.",
+                             QMessageBox::Ok);
     books.clear();
+    readers.clear();
+    entries.clear();
     updateTableWidgets();
 }
 
@@ -194,7 +207,12 @@ void MainWindow::btnReaderAdd_clicked() {
 }
 
 void MainWindow::btnClearReaders_clicked() {
+    QMessageBox::information(this, "Внимание",
+                             "В целях обеспечения корректности информации, будет очищена вся база данных.",
+                             QMessageBox::Ok);
+    books.clear();
     readers.clear();
+    entries.clear();
     updateTableWidgets();
 }
 
@@ -276,6 +294,11 @@ void MainWindow::btnEntryCheckOut_clicked() {
 }
 
 void MainWindow::btnClearEntries_clicked() {
+    QMessageBox::information(this, "Внимание",
+                             "В целях обеспечения корректности информации, будет очищена вся база данных.",
+                             QMessageBox::Ok);
+    books.clear();
+    readers.clear();
     entries.clear();
     updateTableWidgets();
 }

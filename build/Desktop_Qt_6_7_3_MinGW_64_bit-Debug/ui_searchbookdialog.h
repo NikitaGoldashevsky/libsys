@@ -90,6 +90,7 @@ public:
 
         twBooks = new QTableWidget(verticalLayoutWidget);
         twBooks->setObjectName("twBooks");
+        twBooks->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
 
         verticalLayout->addWidget(twBooks);
 

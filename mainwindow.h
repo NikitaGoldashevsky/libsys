@@ -14,6 +14,7 @@
 #include "closeentrydialog.h"
 #include "searchreaderdialog.h"
 #include "searchbookdialog.h"
+#include "dialogfactory.h"
 
 #include "BooksT.h"
 #include "ReadersHT.h"

@@ -73,7 +73,11 @@
      </widget>
     </item>
     <item>
-     <widget class="QTableWidget" name="twBooks"/>
+     <widget class="QTableWidget" name="twBooks">
+      <property name="editTriggers">
+       <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

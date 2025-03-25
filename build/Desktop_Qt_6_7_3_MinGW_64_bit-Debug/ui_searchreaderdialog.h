@@ -90,6 +90,7 @@ public:
 
         twReaders = new QTableWidget(verticalLayoutWidget);
         twReaders->setObjectName("twReaders");
+        twReaders->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
 
         verticalLayout->addWidget(twReaders);
 
