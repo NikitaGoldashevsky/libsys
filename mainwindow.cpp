@@ -149,13 +149,45 @@ void MainWindow::btnReaderRemove_clicked() {
 }
 
 void MainWindow::btnClearBooks_clicked() {
-    QMessageBox::information(this, "Внимание",
-                             "В целях обеспечения корректности информации, будет очищена вся база данных.",
-                             QMessageBox::Ok);
-    books.clear();
-    readers.clear();
-    entries.clear();
-    updateTableWidgets();
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Вопрос");
+    msgBox.setText("Удалить все книги или только не выданные в данный момент?");
+
+    const QString opt1Text = "Все";
+    const QString opt2Text = "Не выданные";
+    msgBox.addButton(opt1Text, QMessageBox::YesRole);
+    msgBox.addButton(opt2Text, QMessageBox::NoRole);
+    msgBox.exec();
+
+    if (msgBox.clickedButton()->text() == opt1Text) {
+        QMessageBox::information(this, "Внимание",
+                                 "В целях обеспечения корректности информации, будет очищена вся база данных.",
+                                 QMessageBox::Ok);
+        books.clear();
+        readers.clear();
+        entries.clear();
+        updateTableWidgets();
+
+    } else {
+        int rowCount = ui->twBooks->rowCount();
+
+        for (int row = 0; row < rowCount; ++row) {
+            QTableWidgetItem* item = ui->twBooks->item(row, 0);
+
+            if (item) {
+                const std::string cipher = item->text().toStdString();
+                const std::string cardsString = entries.getCardsByCipher(cipher, true);
+
+                if (cardsString.empty()) {
+                    books.remove(cipher);
+                }
+                else {
+                    continue; // someone has the book, so it shouldnt be removed
+                }
+            }
+        }
+        updateTableWidgets();
+    }
 }
 
 void MainWindow::btnReaderAdd_clicked() {
@@ -207,13 +239,45 @@ void MainWindow::btnReaderAdd_clicked() {
 }
 
 void MainWindow::btnClearReaders_clicked() {
-    QMessageBox::information(this, "Внимание",
-                             "В целях обеспечения корректности информации, будет очищена вся база данных.",
-                             QMessageBox::Ok);
-    books.clear();
-    readers.clear();
-    entries.clear();
-    updateTableWidgets();
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Вопрос");
+    msgBox.setText("Удалить всех читателей или только не имеющих в данный момент книг?");
+
+    const QString opt1Text = "Всех";
+    const QString opt2Text = "Не имеющих книг";
+    msgBox.addButton(opt1Text, QMessageBox::YesRole);
+    msgBox.addButton(opt2Text, QMessageBox::NoRole);
+    msgBox.exec();
+
+    if (msgBox.clickedButton()->text() == opt1Text) {
+        QMessageBox::information(this, "Внимание",
+                                 "В целях обеспечения корректности информации, будет очищена вся база данных.",
+                                 QMessageBox::Ok);
+        books.clear();
+        readers.clear();
+        entries.clear();
+        updateTableWidgets();
+
+    } else {
+        int rowCount = ui->twReaders->rowCount();
+
+        for (int row = 0; row < rowCount; ++row) {
+            QTableWidgetItem* item = ui->twReaders->item(row, 0);
+
+            if (item) {
+                const std::string card = item->text().toStdString();
+                const std::string ciphersString = entries.getCiphersByCard(card, true);
+
+                if (ciphersString.empty()) {
+                    readers.remove(card);
+                }
+                else {
+                    continue; // reader has some books, so he shouldnt be removed
+                }
+            }
+        }
+        updateTableWidgets();
+    }
 }
 
 void MainWindow::btnEntryCheckIn_clicked() {
@@ -294,13 +358,43 @@ void MainWindow::btnEntryCheckOut_clicked() {
 }
 
 void MainWindow::btnClearEntries_clicked() {
-    QMessageBox::information(this, "Внимание",
-                             "В целях обеспечения корректности информации, будет очищена вся база данных.",
-                             QMessageBox::Ok);
-    books.clear();
-    readers.clear();
-    entries.clear();
-    updateTableWidgets();
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Вопрос");
+    msgBox.setText("Удалить все записи или только записи о возвращенных книгах?");
+
+    const QString opt1Text = "Все";
+    const QString opt2Text = "О возвращенных книгах";
+    msgBox.addButton(opt1Text, QMessageBox::YesRole);
+    msgBox.addButton(opt2Text, QMessageBox::NoRole);
+    msgBox.exec();
+
+    if (msgBox.clickedButton()->text() == opt1Text) {
+        QMessageBox::information(this, "Внимание",
+                                 "В целях обеспечения корректности информации, будет очищена вся база данных.",
+                                 QMessageBox::Ok);
+        books.clear();
+        readers.clear();
+        entries.clear();
+        updateTableWidgets();
+    } else {
+        int rowCount = ui->twEntries->rowCount();
+
+        for (int row = 0; row < rowCount; ++row) {
+            QTableWidgetItem* cardItem = ui->twEntries->item(row, 0);
+            QTableWidgetItem* cipherItem = ui->twEntries->item(row, 1);
+            QTableWidgetItem* returnDateItem = ui->twEntries->item(row, 3);
+
+            if (cardItem && cipherItem && returnDateItem) {
+                if (returnDateItem->text().toStdString() == NOT_RETURNED) {
+                    entries.remove(cardItem->text().toStdString(), cipherItem->text().toStdString());
+                }
+                else {
+                    continue; // entry isnt closed, i.e. the book hasnt been returned yet
+                }
+            }
+        }
+        updateTableWidgets();
+    }
 }
 
 void MainWindow::updateTableWidgets() {
