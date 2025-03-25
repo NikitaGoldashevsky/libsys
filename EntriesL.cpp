@@ -41,21 +41,30 @@ void EntriesL::print() const {
 void EntriesL::sort() {
     if (!head || !head->next) return;
 
-    bool swapped;
-    do {
-        swapped = false;
-        Entry* current = head;
-        while (current->next) {
-            if (current->cipher > current->next->cipher) {
-                std::swap(current->card, current->next->card);
-                std::swap(current->cipher, current->next->cipher);
-                std::swap(current->issueDate, current->next->issueDate);
-                std::swap(current->returnDate, current->next->returnDate);
-                swapped = true;
+    Entry* current = head;
+    // проходим по всему списку
+    while (current) {
+        // находим минимальный элемент в оставшейся части списка
+        Entry* min = current;
+        Entry* runner = current->next;
+
+        while (runner) {
+            if (runner->cipher < min->cipher) {
+                min = runner;
             }
-            current = current->next;
+            runner = runner->next;
         }
-    } while (swapped);
+
+        // если нашли элемент с меньшим шифром, меняем значения местами
+        if (min != current) {
+            std::swap(current->card, min->card);
+            std::swap(current->cipher, min->cipher);
+            std::swap(current->issueDate, min->issueDate);
+            std::swap(current->returnDate, min->returnDate);
+        }
+
+        current = current->next;
+    }
 }
 
 void EntriesL::remove(const std::string& card, const std::string& cipher) {
