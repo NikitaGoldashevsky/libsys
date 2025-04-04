@@ -16,39 +16,19 @@ struct Reader {
 struct HTVal {
     Reader* reader;
     std::string hashKey;
+    HTVal* next; // Указатель на следующий элемент
 };
-
-// QDebug operator<<(QDebug dbg, const HTVal* htval) {
-//     if (htval == nullptr) {
-//         dbg.nospace() << "HTVal is nullptr";
-//     } else {
-//         dbg.nospace() << "Hash Key: " << htval->hashKey << "\n";
-//         if (htval->reader == nullptr) {
-//             dbg.nospace() << "\tReader is nullptr";
-//         } else {
-//             dbg.nospace() << "\tCard: " << QString::fromStdString(htval->reader->card) << "\n"
-//                           << "\tFIO: " << QString::fromStdString(htval->reader->fio) << "\n"
-//                           << "\tBirth Year: " << htval->reader->birthYear << "\n"
-//                           << "\tAddress: " << QString::fromStdString(htval->reader->address) << "\n"
-//                           << "\tWorkplace: " << QString::fromStdString(htval->reader->workplace);
-//         }
-//     }
-//     return dbg;
-// }
-
 
 class ReadersHT {
 private:
-    const int collisionStep = 17;
-    const int collisionTries = 30;
-    HTVal** data;
+    HTVal** data; // Массив указателей на начало цепочек
     int size;
 
     Reader* at(const int index) const;
-    void resizeTable();
 
 public:
     ReadersHT(const int size);
+    ~ReadersHT();
 
     bool add(Reader* reader);
     int hash(const std::string& str) const;
@@ -59,6 +39,5 @@ public:
     void clear();
     void fillTableWidget(QTableWidget *tableWidget, const std::string& fioFilter = "");
 };
-
 
 #endif // READERSHT_H

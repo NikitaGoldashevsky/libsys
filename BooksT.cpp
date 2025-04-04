@@ -346,15 +346,17 @@ Node* BooksT::removeNode(Node* root, Book* book, bool& removed) {
 }
 
 bool BooksT::remove(Book* book) {
-    removeElemR(root, book);
+    return removeElemR(root, book);
 }
 
 bool BooksT::remove(const std::string& cipher) {
     Book* book = get(cipher);
-    removeElemR(root, book);
+    return removeElemR(root, book);
 }
 
 bool BooksT::removeElemR(Node*& root, Book* book) {
+    if (!book) return false;
+
     bool removed = false;
     root = removeNode(root, book, removed);
     return removed;

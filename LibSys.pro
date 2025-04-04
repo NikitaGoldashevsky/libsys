@@ -28,6 +28,7 @@ HEADERS += \
     BooksT.h \
     EntriesL.h \
     ReadersHT.h \
+    TestsAll.h \
     TestsHashTable.h \
     TestsList.h \
     TestsTree.h \

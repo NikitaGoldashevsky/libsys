@@ -8,6 +8,7 @@
 #include "TestsHashTable.h"
 #include "TestsTree.h"
 #include "TestsList.h"
+#include "TestsAll.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,13 +16,9 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    if (false) {
-        testHashTable();
-
-        testTree();
-
-        testList();
-    }
+    //testTree();
+    //testList();
+    testHashTable();
 
     return a.exec();
 }

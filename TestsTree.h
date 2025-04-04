@@ -26,6 +26,16 @@ void testTree() {
     tr.add(new Book{"113.003", "fd", "gfd", "cx", 1, 2, 3});
     tr.print();
 
+    std::cout << tr.add(new Book{"113.003", "fd", "gfd", "cx", 1, 2, 3}) << std::endl;
+
+    std::cout << tr.get("113.003")->cipher << std::endl;
+
+    std::cout << tr.get("999.999") << std::endl;
+
+    std::cout << tr.remove("113.003") << std::endl;
+
+    std::cout << tr.remove("999.999") << std::endl;
+
     tr.clear();
 }
 

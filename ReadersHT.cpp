@@ -1,141 +1,115 @@
 #include "ReadersHT.h"
 
-
-bool ReadersHT::add(Reader* reader) {
-    int hashKey = hash(reader->card);
-
-    while (true) {
-        for (int i = 0; i < collisionTries; i++) {
-            if (data[hashKey] == nullptr || data[hashKey]->reader == nullptr) { // Check for empty slot or tombstone
-                if (data[hashKey] == nullptr) {
-                    data[hashKey] = new HTVal{reader, reader->card};
-                } else {
-                    data[hashKey]->reader = reader;
-                }
-                return true;
-            } else {
-                hashKey = (hashKey + collisionStep) % size;
-            }
-        }
-        resizeTable();
-    }
+// Конструктор
+ReadersHT::ReadersHT(const int size) {
+    this->size = size;
+    data = new HTVal*[size]();
 }
 
+// Деструктор
+ReadersHT::~ReadersHT() {
+    clear();
+    delete[] data;
+}
+
+// Хеш-функция
 int ReadersHT::hash(const std::string& str) const {
     int hashRes = 0;
     for (const char ch : str) {
-        hashRes += ((int)ch)*((int)ch);
+        hashRes += ((int)ch) * ((int)ch);
     }
-    hashRes = hashRes % size;
-    return hashRes;
+    return hashRes % size;
 }
 
-void ReadersHT::resizeTable() {
-    int oldSize = size;
-    HTVal** oldData = data;
+// Добавление элемента
+bool ReadersHT::add(Reader* reader) {
+    int hashKey = hash(reader->card);
+    HTVal* newNode = new HTVal{reader, reader->card, nullptr};
 
-    int newSize = oldSize * 2;
-    data = new HTVal*[newSize]();
-    size = newSize;
+    if (data[hashKey] == nullptr) {
+        data[hashKey] = newNode;
+    } else {
+        newNode->next = data[hashKey];
+        data[hashKey] = newNode;
+    }
 
-    for (int i = 0; i < oldSize; ++i) {
-        HTVal* oldVal = oldData[i];
-        if (oldVal != nullptr && oldVal->reader != nullptr) {
-            Reader* reader = oldVal->reader;
-            int hashKey = hash(reader->card);
-            bool inserted = false;
-            for (int j = 0; j < collisionTries; ++j) {
-                if (data[hashKey] == nullptr) {
-                    data[hashKey] = new HTVal{reader, reader->card};
-                    inserted = true;
-                    break;
-                } else {
-                    hashKey = (hashKey + collisionStep) % size;
-                }
-            }
-            if (!inserted) {
-                if (newSize > 1000000) {
-                    throw std::runtime_error("Hash table resize failed: too many elements");
-                }
-                resizeTable();
-                break;
-            }
-        }
-    }
-    for (int i = 0; i < oldSize; ++i) {
-        delete oldData[i];
-    }
-    delete[] oldData;
+    return true;
 }
 
-ReadersHT::ReadersHT(const int size) {
-    this->size = size;
-    data = new HTVal*[size];
-    for (int i = 0; i < size; i++) {
-        data[i] = nullptr;
-    }
-}
-
-Reader* ReadersHT::at(const int index) const {
-    if (index >= size) return nullptr;
-    if (data[index] != nullptr) {
-        return this->data[index]->reader;
-    }
-    return nullptr;
-}
-
+// Проверка наличия элемента
 bool ReadersHT::has(const std::string& card) const {
     return get(card) != nullptr;
 }
 
+// Получение элемента
 Reader* ReadersHT::get(const std::string& card) const {
-    int originalHash = hash(card);
-    int currentHash = originalHash;
-    for (int i = 0; i < collisionTries; i++) {
-        HTVal* cur = data[currentHash];
-        if (cur == nullptr) {
-            return nullptr;
+    int hashKey = hash(card);
+    HTVal* current = data[hashKey];
+
+    while (current) {
+        if (current->hashKey == card && current->reader != nullptr) {
+            return current->reader;
         }
-        if (cur->hashKey == card && cur->reader != nullptr && cur->reader->card == card) {
-            return cur->reader;
-        }
-        currentHash = (currentHash + collisionStep) % size;
+        current = current->next;
     }
+
     return nullptr;
 }
 
+// Удаление элемента
 bool ReadersHT::remove(const std::string& card) {
-    int originalHash = hash(card);
-    int currentHash = originalHash;
+    int hashKey = hash(card);
+    HTVal* current = data[hashKey];
+    HTVal* prev = nullptr;
 
-    for (int i = 0; i < collisionTries; ++i) {
-        HTVal* curVal = data[currentHash];
-        if (curVal == nullptr) {
-            return false;
-        }
-        if (curVal->hashKey == card && curVal->reader != nullptr && curVal->reader->card == card) {
-            curVal->reader = nullptr;
+    while (current) {
+        if (current->hashKey == card && current->reader != nullptr) {
+            if (prev) {
+                prev->next = current->next; // Удаляем из середины или конца списка
+            } else {
+                data[hashKey] = current->next; // Удаляем из начала списка
+            }
+
+            delete current;
             return true;
         }
-        currentHash = (currentHash + collisionStep) % size;
+        prev = current;
+        current = current->next;
     }
+
     return false;
 }
 
+// Вывод таблицы в консоль
 void ReadersHT::log() const {
     qDebug() << "Hash Table Size:" << this->size;
 
     for (int i = 0; i < this->size; ++i) {
+        qDebug() << i << ")";
         HTVal* current = data[i];
-        if (current == nullptr) {
-            qDebug() << i << ") undef";
-        } else if (current->reader == nullptr) {
-            qDebug() << i << ") tomb";
-        } else {
-            qDebug() << i << ") Def - " << current->reader->fio << " - HashKey:" << QString::fromStdString(current->hashKey) << "- Hash:" << QString::number(hash(current->reader->card));
+
+        while (current) {
+            qDebug() << " -> " << QString::fromStdString(current->hashKey)
+            << " - " << QString::fromStdString(current->reader->fio);
+            current = current->next;
         }
     }
     qDebug() << "\n";
+}
+
+// Очистка таблицы
+void ReadersHT::clear() {
+    for (int i = 0; i < size; ++i) {
+        HTVal* current = data[i];
+
+        while (current) {
+            HTVal* next = current->next;
+            delete current;
+            current = next;
+        }
+
+        data[i] = nullptr;
+    }
 }
 
 void ReadersHT::fillTableWidget(QTableWidget* tableWidget, const std::string& fioFilter) {
@@ -194,30 +168,25 @@ void ReadersHT::fillTableWidget(QTableWidget* tableWidget, const std::string& fi
 
     for (int i = 0; i < size; ++i) {
         HTVal* current = data[i];
-        if (current != nullptr && current->reader != nullptr) {
-            Reader* reader = current->reader;
-            if (fioFilter.empty() || kmpSearch(reader->fio, fioFilter)) {
-                tableWidget->insertRow(row);
-                tableWidget->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(reader->card)));
-                tableWidget->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(reader->fio)));
-                tableWidget->setItem(row, 2, new QTableWidgetItem(QString::number(reader->birthYear)));
-                tableWidget->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(reader->address)));
-                tableWidget->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(reader->workplace)));
-                row++;
+
+        while (current) {  // Проход по цепочке
+            if (current->reader != nullptr) {
+                Reader* reader = current->reader;
+                if (fioFilter.empty() || kmpSearch(reader->fio, fioFilter)) {
+                    tableWidget->insertRow(row);
+                    tableWidget->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(reader->card)));
+                    tableWidget->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(reader->fio)));
+                    tableWidget->setItem(row, 2, new QTableWidgetItem(QString::number(reader->birthYear)));
+                    tableWidget->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(reader->address)));
+                    tableWidget->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(reader->workplace)));
+                    row++;
+                }
             }
+            current = current->next;  // Переход к следующему элементу цепочки
         }
     }
 
     for (int column = 0; column < tableWidget->columnCount(); ++column) {
         tableWidget->resizeColumnToContents(column);
     }
-}
-
-void ReadersHT::clear() {
-    for (int i = 0; i < size; ++i) {
-        delete data[i];  // Free memory
-        data[i] = nullptr;
-    }
-    delete[] data;  // Free hash table array
-    data = new HTVal*[size]();  // Allocate fresh array
 }

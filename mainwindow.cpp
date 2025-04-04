@@ -5,7 +5,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
     regexCard(R"(^\d\d\d\d-\d\d$)"),
-    regexCipher(R"(^\d{2}[1-9]\.\d{2}[1-9]$)")
+    regexCipher(R"(^\d{2}\d\.\d{2}\d$)")
 {
     ui->setupUi(this);
     ui->btnBookAdd->setFocus();
