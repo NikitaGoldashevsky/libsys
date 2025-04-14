@@ -24,6 +24,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnEntryCheckIn, &QPushButton::clicked, this, &MainWindow::btnEntryCheckIn_clicked);
     connect(ui->btnClearEntries, &QPushButton::clicked, this, &MainWindow::btnClearEntries_clicked);
 
+    // Set observer callback for EntriesL
+    entries.setOnEntryAdded([this]() {
+        updateTableWidgets();
+    });
+
     // Startup Data--------------
     books.add(new Book{"001.002", "Stephen King", "Billy summers", "Some American publisher idk", 2015, 4, 1});
     books.add(new Book{"001.001", "Thomas De Quincey", "Confessions of an English Opium-Eater", "Some publisher idk", 1822, 3, 0});

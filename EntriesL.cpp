@@ -16,6 +16,16 @@ void EntriesL::add(const std::string& card, const std::string& cipher, const std
     }
     tail = newEntry;
     sort();
+
+    // Notify observer if callback is set
+    if (onEntryAdded) {
+        onEntryAdded();
+    }
+}
+
+// Added for Observer pattern
+void EntriesL::setOnEntryAdded(std::function<void()> callback) {
+    onEntryAdded = callback;
 }
 
 Entry* EntriesL::get(const std::string& card, const std::string& cipher) {

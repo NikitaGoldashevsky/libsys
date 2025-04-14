@@ -4,6 +4,7 @@
 #include <string>
 #include <QDebug>
 #include <QTableWidget>
+#include <functional> // Added for std::function
 
 const static std::string NOT_RETURNED = "-";
 
@@ -35,9 +36,15 @@ public:
     std::string getCardsByCipher(const std::string &cipher, bool notReturned = false) const;
     void removeAllByCard(const std::string &card);
     void removeAllByCipher(const std::string &cipher);
+
+    // Added for Observer pattern
+    void setOnEntryAdded(std::function<void()> callback);
+
 private:
     Entry* head;
     Entry* tail;
+    // Added for Observer pattern
+    std::function<void()> onEntryAdded = nullptr;
 };
 
 #endif // ENTRIESL_H
