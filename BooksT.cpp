@@ -271,8 +271,7 @@ void BooksT::fillTableWidget(QTableWidget* tableWidget, const std::string& filte
             tableWidget->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(cur->book->name)));
             tableWidget->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(cur->book->publisher)));
             tableWidget->setItem(row, 4, new QTableWidgetItem(QString::number(cur->book->pubYear)));
-            tableWidget->setItem(row, 5, new QTableWidgetItem(QString::number(cur->book->copiesAll)));
-            tableWidget->setItem(row, 6, new QTableWidgetItem(QString::number(cur->book->copiesStock)));
+            tableWidget->setItem(row, 5, new QTableWidgetItem(QString(cur->book->inStock == true ? "да" : "нет")));
             row++;
         }
         traverseAndFill(cur->right);

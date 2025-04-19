@@ -37,13 +37,13 @@ public:
     void removeAllByCard(const std::string &card);
     void removeAllByCipher(const std::string &cipher);
 
-    // Added for Observer pattern
+    // Observer pattern
     void setOnEntryAdded(std::function<void()> callback);
 
 private:
     Entry* head;
     Entry* tail;
-    // Added for Observer pattern
+    // Observer pattern
     std::function<void()> onEntryAdded = nullptr;
 };
 

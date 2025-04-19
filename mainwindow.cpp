@@ -30,8 +30,8 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     // Startup Data--------------
-    books.add(new Book{"001.002", "Stephen King", "Billy summers", "Some American publisher idk", 2015, 4, 1});
-    books.add(new Book{"001.001", "Thomas De Quincey", "Confessions of an English Opium-Eater", "Some publisher idk", 1822, 3, 0});
+    books.add(new Book{"001.002", "Stephen King", "Billy summers", "Some American publisher idk", 2015, true});
+    books.add(new Book{"001.001", "Thomas De Quincey", "Confessions of an English Opium-Eater", "Some publisher idk", 1822, false});
 
     readers.add(new Reader{"Ч0001-25", "David Lockridge", 1978, "Colorado", "Serial killer"});
     readers.add(new Reader{"Ч0002-25", "John Smith", 1234, "Gallifrey", "Time traveller"});
@@ -66,11 +66,6 @@ void MainWindow::btnBookAdd_clicked() {
                 continue;
             }
 
-            if (d->getCopiesAll() < 1 || (d->getCopiesStock() > d->getCopiesAll())) {
-                QMessageBox::critical(this, "Ошибка", "Указано некорректное число экземпляров!");
-                continue;
-            }
-
             if (d->getName().empty()) {
                 QMessageBox::critical(this, "Ошибка", "Не указаны авторы книги!");
                 continue;
@@ -89,7 +84,7 @@ void MainWindow::btnBookAdd_clicked() {
             if (!books.has(d->getCipher())) {
                 books.add(new Book{
                     d->getCipher(), d->getAuthors(), d->getName(), d->getPublisher(),
-                    d->getPublicationYear(), d->getCopiesAll(), d->getCopiesStock()
+                    d->getPublicationYear(), d->getInStock()
                 });
                 updateTableWidgets();
                 delete dialogPtr;
@@ -305,7 +300,7 @@ void MainWindow::btnEntryCheckIn_clicked() {
             Entry* const entry = entries.get(d.getCard(), d.getCipher());
             if (entry) {
                 entry->returnDate = d.getCheckInDate();
-                books.get(entry->cipher)->copiesStock++;
+                books.get(entry->cipher)->inStock = true;
                 updateTableWidgets();
                 return;
             }
@@ -346,13 +341,13 @@ void MainWindow::btnEntryCheckOut_clicked() {
                 continue;
             }
 
-            if (book->copiesStock < 1) {
-                QMessageBox::critical(this, "Ошибка", "Экземпляров указанной книги не осталось в наличии!");
+            if (book->inStock == false) {
+                QMessageBox::critical(this, "Ошибка", "Указанной книги нет в наличии!");
                 continue;
             }
 
             entries.add(card, cipher, d.getCheckOutDate(), NOT_RETURNED);
-            book->copiesStock--;
+            book->inStock = false;
             updateTableWidgets();
             return;
         }
@@ -404,8 +399,8 @@ void MainWindow::btnClearEntries_clicked() {
 
 void MainWindow::updateTableWidgets() {
     // Books
-    ui->twBooks->setColumnCount(7);
-    ui->twBooks->setHorizontalHeaderLabels(QStringList{"Шифр", "Авторы", "Название", "Издательство", "Год публикации", "Копий всего", "Копий в наличии"});
+    ui->twBooks->setColumnCount(6);
+    ui->twBooks->setHorizontalHeaderLabels(QStringList{"Шифр", "Авторы", "Название", "Издательство", "Год публикации", "В наличии"});
     books.fillTableWidget(ui->twBooks);
 
     // Readers

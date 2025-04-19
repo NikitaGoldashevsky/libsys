@@ -12,8 +12,9 @@ struct Book {
     std::string name;
     std::string publisher;
     int pubYear;
-    int copiesAll;
-    int copiesStock;
+    // int copiesAll;
+    // int copiesStock;
+    bool inStock;
 
     bool operator==(const Book& other) const {
         return cipher == other.cipher;

@@ -5,28 +5,28 @@
 
 void testTree() {
     BooksT tr;
-    tr.add(new Book{"111.000", "fd", "gfd", "cx", 1, 2, 3});
+    tr.add(new Book{"111.000", "fd", "gfd", "cx", 1, true});
     tr.print();
 
-    tr.add(new Book{"113.004", "fd", "gfd", "cx", 1, 2, 3});
+    tr.add(new Book{"113.004", "fd", "gfd", "cx", 1, true});
     tr.print();
 
-    tr.add(new Book{"112.000", "fd", "gfd", "cx", 1, 2, 3});
+    tr.add(new Book{"112.000", "fd", "gfd", "cx", 1, true});
     tr.print();
 
-    tr.add(new Book{"113.000", "fd", "gfd", "cx", 1, 2, 3});
+    tr.add(new Book{"113.000", "fd", "gfd", "cx", 1, false});
     tr.print();
 
-    tr.add(new Book{"113.001", "fd", "gfd", "cx", 1, 2, 3});
+    tr.add(new Book{"113.001", "fd", "gfd", "cx", 1, false});
     tr.print();
 
-    tr.add(new Book{"113.002", "fd", "gfd", "cx", 1, 2, 3});
+    tr.add(new Book{"113.002", "fd", "gfd", "cx", 1, false});
     tr.print();
 
-    tr.add(new Book{"113.003", "fd", "gfd", "cx", 1, 2, 3});
+    tr.add(new Book{"113.003", "fd", "gfd", "cx", 1, true});
     tr.print();
 
-    std::cout << tr.add(new Book{"113.003", "fd", "gfd", "cx", 1, 2, 3}) << std::endl;
+    std::cout << tr.add(new Book{"113.003", "fd", "gfd", "cx", 1, true}) << std::endl;
 
     std::cout << tr.get("113.003")->cipher << std::endl;
 

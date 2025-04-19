@@ -14,9 +14,9 @@ void testAll() {
     std::cout << "Пустое дерево успешно создано" << std::endl << std::endl;
 
     std::cout << "Тест 2 - Добавление элементов и проверка балансировки" << std::endl;
-    Book* book1 = new Book{"001.001", "Author 1", "Book 1", "Publisher 1", 2020, 5, 5};
-    Book* book2 = new Book{"002.002", "Author 2", "Book 2", "Publisher 2", 2021, 3, 3};
-    Book* book3 = new Book{"003.003", "Author 3", "Book 3", "Publisher 3", 2022, 7, 7};
+    Book* book1 = new Book{"001.001", "Author 1", "Book 1", "Publisher 1", 2020, true};
+    Book* book2 = new Book{"002.002", "Author 2", "Book 2", "Publisher 2", 2021, true};
+    Book* book3 = new Book{"003.003", "Author 3", "Book 3", "Publisher 3", 2022, true};
 
     assert(tree.add(book1));
     assert(tree.height() == 1);
@@ -29,8 +29,8 @@ void testAll() {
     std::cout << "Элементы успешно добавлены, дерево сбалансировано" << std::endl << std::endl;
 
     std::cout << "Тест 3 - Проверка балансировки при добавлении элементов, вызывающих вращения" << std::endl;
-    Book* book4 = new Book{"000.001", "Author 4", "Book 4", "Publisher 4", 2023, 2, 2};
-    Book* book5 = new Book{"000.002", "Author 5", "Book 5", "Publisher 5", 2023, 4, 4};
+    Book* book4 = new Book{"000.001", "Author 4", "Book 4", "Publisher 4", 2023, true};
+    Book* book5 = new Book{"000.002", "Author 5", "Book 5", "Publisher 5", 2023, true};
 
     assert(tree.add(book4));
     assert(tree.add(book5));
@@ -49,7 +49,7 @@ void testAll() {
     std::cout << "Методы has() и get() работают корректно" << std::endl << std::endl;
 
     std::cout << "Тест 5 - Проверка защиты от дубликатов" << std::endl;
-    assert(!tree.add(new Book{"001.001", "Duplicate", "Duplicate", "Duplicate", 2000, 1, 1}));
+    assert(!tree.add(new Book{"001.001", "Duplicate", "Duplicate", "Duplicate", 2000, true}));
     std::cout << "Дубликаты корректно отклоняются" << std::endl << std::endl;
 
     std::cout << "Тест 6 - Удаление элементов и проверка балансировки" << std::endl;

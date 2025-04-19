@@ -8,8 +8,6 @@ AddBookDialog::AddBookDialog(QWidget *parent)
     ui->setupUi(this);
 
     ui->leCipher->setFocus();
-    ui->sbCopiesAll->setRange(0, 999999);
-    ui->sbCopiesStock->setRange(0, 999999);
 }
 
 AddBookDialog::~AddBookDialog()
@@ -42,12 +40,16 @@ int AddBookDialog::getPublicationYear() const
     return ui->dePubYear->date().year();
 }
 
-int AddBookDialog::getCopiesAll() const
-{
-    return ui->sbCopiesAll->value();
-}
+// int AddBookDialog::getCopiesAll() const
+// {
+//     return ui->sbCopiesAll->value();
+// }
 
-int AddBookDialog::getCopiesStock() const
-{
-    return ui->sbCopiesStock->value();
+// int AddBookDialog::getCopiesStock() const
+// {
+//     return ui->sbCopiesStock->value();
+// }
+
+bool AddBookDialog::getInStock() const {
+    return true;
 }

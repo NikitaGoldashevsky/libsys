@@ -21,8 +21,10 @@ public:
     std::string getCipher() const;
     std::string getPublisher() const;
     int getPublicationYear() const;
-    int getCopiesAll() const;
-    int getCopiesStock() const;
+    // int getCopiesAll() const;
+    // int getCopiesStock() const;
+    bool getInStock() const;
+
 private:
     Ui::AddBookDialog *ui;
 };

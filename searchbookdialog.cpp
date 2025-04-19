@@ -35,14 +35,14 @@ void SearchBookDialog::btnSearch_clicked() {
 
     switch (curSearchType) {
     case BY_NAME_OR_AUTHOR:
-        ui->twBooks->setColumnCount(7);
-        ui->twBooks->setHorizontalHeaderLabels(QStringList{"Шифр", "Авторы", "Название", "Издательство", "Год публикации", "Копий всего", "Копий в наличии"});
+        ui->twBooks->setColumnCount(6);
+        ui->twBooks->setHorizontalHeaderLabels(QStringList{"Шифр", "Авторы", "Название", "Издательство", "Год публикации", "В наличии"});
 
         books->fillTableWidget(ui->twBooks, input);
         break;
     case BY_CIPHER:
-        ui->twBooks->setColumnCount(8);
-        ui->twBooks->setHorizontalHeaderLabels(QStringList{"Шифр", "Авторы", "Название", "Издательство", "Год публикации", "Копий всего", "Копий в наличии", "Держатели"});
+        ui->twBooks->setColumnCount(6);
+        ui->twBooks->setHorizontalHeaderLabels(QStringList{"Шифр", "Авторы", "Название", "Издательство", "Год публикации", "В наличии"});
 
         ui->twBooks->setRowCount(0);
         const Book* book = books->get(input);
@@ -53,8 +53,7 @@ void SearchBookDialog::btnSearch_clicked() {
             ui->twBooks->setItem(0, 2, new QTableWidgetItem(QString::fromStdString(book->name)));
             ui->twBooks->setItem(0, 3, new QTableWidgetItem(QString::fromStdString(book->publisher)));
             ui->twBooks->setItem(0, 4, new QTableWidgetItem(QString::number(book->pubYear)));
-            ui->twBooks->setItem(0, 5, new QTableWidgetItem(QString::number(book->copiesAll)));
-            ui->twBooks->setItem(0, 6, new QTableWidgetItem(QString::number(book->copiesStock)));
+            ui->twBooks->setItem(0, 5, new QTableWidgetItem(book->inStock == true ? QString("да") : QString("нет")));
 
             const std::string cardsString = entries->getCardsByCipher(book->cipher, true);
             std::string cardsAndFIOs = "";

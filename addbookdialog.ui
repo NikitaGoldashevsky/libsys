@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>419</width>
-    <height>373</height>
+    <height>315</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>320</y>
+     <y>260</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -35,26 +35,16 @@
      <x>20</x>
      <y>20</y>
      <width>371</width>
-     <height>281</height>
+     <height>211</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="4" column="0">
-     <widget class="QLabel" name="label_5">
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_4">
       <property name="text">
-       <string>Год публикации</string>
+       <string>Издатель</string>
       </property>
      </widget>
-    </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="label_6">
-      <property name="text">
-       <string>Копий всего</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="leCipher"/>
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label_2">
@@ -63,30 +53,33 @@
       </property>
      </widget>
     </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Шифр</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Год публикации</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="leName"/>
+    </item>
     <item row="3" column="1">
      <widget class="QLineEdit" name="lePublisher"/>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="leCipher"/>
     </item>
     <item row="4" column="1">
      <widget class="QDateEdit" name="dePubYear">
       <property name="displayFormat">
        <string>yyyy</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="1">
-     <widget class="QSpinBox" name="sbCopiesAll">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>Издатель</string>
       </property>
      </widget>
     </item>
@@ -97,28 +90,8 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="leName"/>
-    </item>
     <item row="1" column="1">
      <widget class="QLineEdit" name="leAuthors"/>
-    </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Шифр</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="0">
-     <widget class="QLabel" name="label_7">
-      <property name="text">
-       <string>Копий в наличии</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="1">
-     <widget class="QSpinBox" name="sbCopiesStock"/>
     </item>
    </layout>
   </widget>
@@ -145,8 +118,6 @@
   <tabstop>leName</tabstop>
   <tabstop>lePublisher</tabstop>
   <tabstop>dePubYear</tabstop>
-  <tabstop>sbCopiesAll</tabstop>
-  <tabstop>sbCopiesStock</tabstop>
  </tabstops>
  <resources/>
  <connections>

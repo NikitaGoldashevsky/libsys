@@ -23,7 +23,7 @@ void EntriesL::add(const std::string& card, const std::string& cipher, const std
     }
 }
 
-// Added for Observer pattern
+// Observer pattern
 void EntriesL::setOnEntryAdded(std::function<void()> callback) {
     onEntryAdded = callback;
 }
