@@ -73,7 +73,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QTableWidget" name="twReaders">
+     <widget class="QTableView" name="tvReaders">
       <property name="editTriggers">
        <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
       </property>

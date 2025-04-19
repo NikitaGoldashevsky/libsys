@@ -16,9 +16,9 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    //testTree();
-    //testList();
-    testHashTable();
+    // testTree();
+    // testList();
+    // testHashTable();
 
     return a.exec();
 }

@@ -37,6 +37,11 @@ public:
     BooksT* getBooksT();
     EntriesL *getEntriesL();
     void btnBookSearch_clicked();
+
+    QStandardItemModel booksModel;
+    QStandardItemModel readersModel;
+    QStandardItemModel entriesModel;
+
 private:
     Ui::MainWindow *ui;
     BooksT books = BooksT();

@@ -3,8 +3,9 @@
 
 #include <string>
 #include <QDebug>
-#include <QTableWidget>
-#include <functional> // Added for std::function
+#include <QTableView>
+#include <functional>
+#include <QStandardItemModel>
 
 const static std::string NOT_RETURNED = "-";
 
@@ -30,7 +31,7 @@ public:
     int size() const;
     bool has(const std::string& card, const std::string& cipher) const;
     std::string getCiphersByCard(const std::string& card, bool notReturned = false) const;
-    void fillTableWidget(QTableWidget *tableWidget);
+    void fillTableView(QTableView *tableView, QStandardItemModel* model);
     void sort();
     void remove(const std::string &card, const std::string &cipher);
     std::string getCardsByCipher(const std::string &cipher, bool notReturned = false) const;

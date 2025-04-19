@@ -10,6 +10,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->btnBookAdd->setFocus();
 
+    // Set models' headers
+    booksModel.setHorizontalHeaderLabels(QStringList() << "Шифр" << "Авторы" << "Название" << "Издательство" << "Год публикации" << "В наличии");
+    readersModel.setHorizontalHeaderLabels(QStringList() << "Номер билета" << "ФИО" << "Год рождения" << "Адрес" << "Место работы");
+    entriesModel.setHorizontalHeaderLabels(QStringList() << "Номер билета" << "Шифр" << "Дата выдачи" << "Дата возврата");
+
     connect(ui->btnBookAdd, &QPushButton::clicked, this, &MainWindow::btnBookAdd_clicked);
     connect(ui->btnBookRemove, &QPushButton::clicked, this, &MainWindow::btnBookRemove_clicked);
     connect(ui->btnClearBooks, &QPushButton::clicked, this, &MainWindow::btnClearBooks_clicked);
@@ -31,14 +36,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Startup Data--------------
     books.add(new Book{"001.002", "Stephen King", "Billy summers", "Some American publisher idk", 2015, true});
-    books.add(new Book{"001.001", "Thomas De Quincey", "Confessions of an English Opium-Eater", "Some publisher idk", 1822, false});
+    books.add(new Book{"001.001", "Thomas De Quincey", "Confessions of an English Opium-Eater", "Some British publisher idk", 1822, false});
 
     readers.add(new Reader{"Ч0001-25", "David Lockridge", 1978, "Colorado", "Serial killer"});
     readers.add(new Reader{"Ч0002-25", "John Smith", 1234, "Gallifrey", "Time traveller"});
 
     entries.add("Ч0001-25", "001.002", "21.03.2011", "25.03.2011");
     entries.add("Ч0002-25", "001.001", "27.03.2011", "-");
-
     // --------------------------
 
     updateTableWidgets();
@@ -109,7 +113,7 @@ void MainWindow::btnBookRemove_clicked() {
         if (books.has(cipher)) {
             const std::string cards = entries.getCardsByCipher(cipher, true);
             if (!cards.empty()) {
-                std::string msg = "Удаление невозможно. Следующие читатели имеют экземпляры указанной книги: ";
+                std::string msg = "Удаление невозможно. Экземпляр указанной книги имеет читатель с билетом ";
                 msg += cards;
                 QMessageBox::critical(this, "Ошибка", QString::fromStdString(msg));
                 return;
@@ -169,21 +173,20 @@ void MainWindow::btnClearBooks_clicked() {
         updateTableWidgets();
 
     } else {
-        int rowCount = ui->twBooks->rowCount();
+        int rowCount = ui->tvBooks->model()->rowCount();
 
         for (int row = 0; row < rowCount; ++row) {
-            QTableWidgetItem* item = ui->twBooks->item(row, 0);
+            QAbstractItemModel *model = ui->tvBooks->model();
+            QVariant data = model->data(model->index(row, 0));
 
-            if (item) {
-                const std::string cipher = item->text().toStdString();
-                const std::string cardsString = entries.getCardsByCipher(cipher, true);
+            const std::string cipher = data.toString().toStdString();
+            const std::string cardsString = entries.getCardsByCipher(cipher, true);
 
-                if (cardsString.empty()) {
-                    books.remove(cipher);
-                }
-                else {
-                    continue; // someone has the book, so it shouldnt be removed
-                }
+            if (cardsString.empty()) {
+                books.remove(cipher);
+            }
+            else {
+                continue; // someone has the book, so it shouldnt be removed
             }
         }
         updateTableWidgets();
@@ -259,21 +262,20 @@ void MainWindow::btnClearReaders_clicked() {
         updateTableWidgets();
 
     } else {
-        int rowCount = ui->twReaders->rowCount();
+        int rowCount = ui->tvReaders->model()->rowCount();
 
         for (int row = 0; row < rowCount; ++row) {
-            QTableWidgetItem* item = ui->twReaders->item(row, 0);
+            QAbstractItemModel *model = ui->tvBooks->model();
+            QVariant data = model->data(model->index(row, 0));
 
-            if (item) {
-                const std::string card = item->text().toStdString();
-                const std::string ciphersString = entries.getCiphersByCard(card, true);
+            const std::string card = data.toString().toStdString();
+            const std::string ciphersString = entries.getCiphersByCard(card, true);
 
-                if (ciphersString.empty()) {
-                    readers.remove(card);
-                }
-                else {
-                    continue; // reader has some books, so he shouldnt be removed
-                }
+            if (ciphersString.empty()) {
+                readers.remove(card);
+            }
+            else {
+                continue; // reader has some books, so he shouldnt be removed
             }
         }
         updateTableWidgets();
@@ -376,21 +378,26 @@ void MainWindow::btnClearEntries_clicked() {
         readers.clear();
         entries.clear();
         updateTableWidgets();
+
     } else {
-        int rowCount = ui->twEntries->rowCount();
+        int rowCount = ui->tvEntries->model()->rowCount();
 
         for (int row = 0; row < rowCount; ++row) {
-            QTableWidgetItem* cardItem = ui->twEntries->item(row, 0);
-            QTableWidgetItem* cipherItem = ui->twEntries->item(row, 1);
-            QTableWidgetItem* returnDateItem = ui->twEntries->item(row, 3);
+            QAbstractItemModel *model = ui->tvEntries->model();
 
-            if (cardItem && cipherItem && returnDateItem) {
-                if (returnDateItem->text().toStdString() == NOT_RETURNED) {
-                    entries.remove(cardItem->text().toStdString(), cipherItem->text().toStdString());
-                }
-                else {
-                    continue; // entry isnt closed, i.e. the book hasnt been returned yet
-                }
+            QVariant cipherData = model->data(model->index(row, 0));
+            QVariant cardData = model->data(model->index(row, 0));
+            QVariant returnDateData = model->data(model->index(row, 0));
+
+            const std::string cipher = cipherData.toString().toStdString();
+            const std::string card = cardData.toString().toStdString();
+            const std::string returnDate = returnDateData.toString().toStdString();
+
+            if (returnDate == NOT_RETURNED) {
+                entries.remove(card, cipher);
+            }
+            else {
+                continue; // entry isnt closed, i.e. the book hasnt been returned yet
             }
         }
         updateTableWidgets();
@@ -398,20 +405,13 @@ void MainWindow::btnClearEntries_clicked() {
 }
 
 void MainWindow::updateTableWidgets() {
-    // Books
-    ui->twBooks->setColumnCount(6);
-    ui->twBooks->setHorizontalHeaderLabels(QStringList{"Шифр", "Авторы", "Название", "Издательство", "Год публикации", "В наличии"});
-    books.fillTableWidget(ui->twBooks);
+    books.fillTableView(ui->tvBooks, &booksModel);
+    readers.fillTableView(ui->tvReaders, &readersModel);
+    entries.fillTableView(ui->tvEntries, &entriesModel);
 
-    // Readers
-    ui->twReaders->setColumnCount(5);
-    ui->twReaders->setHorizontalHeaderLabels(QStringList{"Номер билета", "ФИО", "Год рождения", "Адрес", "Место работы"});
-    readers.fillTableWidget(ui->twReaders);
-
-    // Entries
-    ui->twEntries->setColumnCount(4);
-    ui->twEntries->setHorizontalHeaderLabels(QStringList{"Номер билета", "Шифр", "Дата выдачи", "Дата возврата"});
-    entries.fillTableWidget(ui->twEntries);
+    for (const auto tv : {ui->tvBooks, ui->tvReaders, ui->tvEntries}) {
+        tv->resizeColumnsToContents();
+    }
 }
 
 void MainWindow::btnReaderSearch_clicked() {

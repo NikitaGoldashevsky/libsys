@@ -35,34 +35,34 @@ void SearchReaderDialog::btnSearch_clicked() {
 
     switch (curSearchType) {
     case BY_FIO:
-        ui->twReaders->setColumnCount(5);
-        ui->twReaders->setHorizontalHeaderLabels(QStringList{"Номер билета", "ФИО", "Год рождения", "Адрес", "Место работы"});
-
-        readers->fillTableWidget(ui->twReaders, input);
+        readers->fillTableView(ui->tvReaders, &currentModel, input);
         break;
     case BY_CARD:
-        ui->twReaders->setColumnCount(6);
-        ui->twReaders->setHorizontalHeaderLabels(QStringList{"Номер билета", "ФИО", "Год рождения", "Адрес", "Место работы", "Шифры выданных книг"});
+        currentModel.clear();
+        currentModel.setHorizontalHeaderLabels(QStringList() << "Номер билета" << "ФИО" << "Год рождения" << "Адрес" << "Место работы" << "Выданные читателю книги");
 
-        ui->twReaders->setRowCount(0);
         const Reader* reader = readers->get(input);
         if (reader) {
-            ui->twReaders->insertRow(0);
-            ui->twReaders->setItem(0, 0, new QTableWidgetItem(QString::fromStdString(reader->card)));
-            ui->twReaders->setItem(0, 1, new QTableWidgetItem(QString::fromStdString(reader->fio)));
-            ui->twReaders->setItem(0, 2, new QTableWidgetItem(QString::number(reader->birthYear)));
-            ui->twReaders->setItem(0, 3, new QTableWidgetItem(QString::fromStdString(reader->address)));
-            ui->twReaders->setItem(0, 4, new QTableWidgetItem(QString::fromStdString(reader->workplace)));
+            QList<QVariant> row =
+                {QString::fromStdString(reader->card), QString::fromStdString(reader->fio),
+                 QString::number(reader->birthYear), QString::fromStdString(reader->address),
+                 QString::fromStdString(reader->workplace)};
+
+            QList<QStandardItem*> items;
+            for (const auto &value : row) {
+                items.append(new QStandardItem(value.toString()));
+            }
 
             std::string ciphersString = entries->getCiphersByCard(reader->card, true);
             if (ciphersString.empty()) {
                 ciphersString = "-";
             }
-            ui->twReaders->setItem(0, 5, new QTableWidgetItem(QString::fromStdString(ciphersString)));
-        }
-        for (int column = 0; column < ui->twReaders->columnCount(); ++column) {
-            ui->twReaders->resizeColumnToContents(column);
+
+            items.append(new QStandardItem(QString::fromStdString(ciphersString)));
+            currentModel.appendRow(items);
+            ui->tvReaders->setModel(&currentModel);
         }
         break;
     }
+    ui->tvReaders->resizeColumnsToContents();
 }

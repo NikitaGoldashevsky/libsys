@@ -1,4 +1,5 @@
 #include "BooksT.h"
+#include <QDebug>
 
 BooksT::BooksT() {
     root = nullptr;
@@ -214,11 +215,8 @@ void BooksT::printTraversalListR(Node* cur, const char* sep) {
     printTraversalListR(cur->right, sep);
 }
 
-void BooksT::fillTableWidget(QTableWidget* tableWidget, const std::string& filter) {
-    if (!tableWidget) return;
-
-    tableWidget->setRowCount(0);
-    int row = 0;
+void BooksT::fillTableView(QTableView* tableView, QStandardItemModel* model, const std::string& filter) {
+    if (!tableView) return;
 
     auto toLower = [](const std::string& str) {
         std::string lowerStr = str;
@@ -265,23 +263,27 @@ void BooksT::fillTableWidget(QTableWidget* tableWidget, const std::string& filte
             boyerMooreSearch(cur->book->name, filter) ||
             boyerMooreSearch(cur->book->authors, filter)) {
 
-            tableWidget->insertRow(row);
-            tableWidget->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(cur->book->cipher)));
-            tableWidget->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(cur->book->authors)));
-            tableWidget->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(cur->book->name)));
-            tableWidget->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(cur->book->publisher)));
-            tableWidget->setItem(row, 4, new QTableWidgetItem(QString::number(cur->book->pubYear)));
-            tableWidget->setItem(row, 5, new QTableWidgetItem(QString(cur->book->inStock == true ? "да" : "нет")));
-            row++;
+            qDebug() << "Adding book:" << QString::fromStdString(cur->book->name) << "with filter:" << QString::fromStdString(filter);
+
+            QList<QVariant> row =
+                {QString::fromStdString(cur->book->cipher), QString::fromStdString(cur->book->authors),
+                                    QString::fromStdString(cur->book->name), QString::fromStdString(cur->book->publisher),
+                                    QString::number(cur->book->pubYear), QString(cur->book->inStock == true ? "да" : "нет")};
+
+            QList<QStandardItem*> items;
+            for (const auto &value : row) {
+                items.append(new QStandardItem(value.toString()));
+            }
+            model->appendRow(items);
         }
         traverseAndFill(cur->right);
     };
 
+    model->clear();
+    model->setHorizontalHeaderLabels(QStringList() << "Шифр" << "Авторы" << "Название" << "Издательство" << "Год публикации" << "В наличии");
     traverseAndFill(root);
-
-    for (int column = 0; column < tableWidget->columnCount(); ++column) {
-        tableWidget->resizeColumnToContents(column);
-    }
+    qDebug() << "Number of rows in model:" << model->rowCount();
+    tableView->setModel(model);
 }
 
 

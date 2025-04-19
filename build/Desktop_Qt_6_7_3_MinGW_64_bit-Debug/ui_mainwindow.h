@@ -20,7 +20,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTableWidget>
+#include <QtWidgets/QTableView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -36,7 +36,7 @@ public:
     QLabel *label_3;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout_5;
-    QTableWidget *twBooks;
+    QTableView *tvBooks;
     QVBoxLayout *verticalLayout_6;
     QPushButton *btnBookAdd;
     QPushButton *btnBookRemove;
@@ -49,7 +49,7 @@ public:
     QLabel *label_2;
     QHBoxLayout *horizontalLayout;
     QVBoxLayout *verticalLayout_2;
-    QTableWidget *twReaders;
+    QTableView *tvReaders;
     QVBoxLayout *verticalLayout_3;
     QPushButton *btnReaderAdd;
     QPushButton *btnReaderRemove;
@@ -62,7 +62,7 @@ public:
     QLabel *label_4;
     QHBoxLayout *horizontalLayout_3;
     QVBoxLayout *verticalLayout_8;
-    QTableWidget *twEntries;
+    QTableView *tvEntries;
     QVBoxLayout *verticalLayout_9;
     QPushButton *btnEntryCheckOut;
     QPushButton *btnEntryCheckIn;
@@ -110,11 +110,11 @@ public:
         horizontalLayout_2->setObjectName("horizontalLayout_2");
         verticalLayout_5 = new QVBoxLayout();
         verticalLayout_5->setObjectName("verticalLayout_5");
-        twBooks = new QTableWidget(verticalLayoutWidget_6);
-        twBooks->setObjectName("twBooks");
-        twBooks->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
+        tvBooks = new QTableView(verticalLayoutWidget_6);
+        tvBooks->setObjectName("tvBooks");
+        tvBooks->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
 
-        verticalLayout_5->addWidget(twBooks);
+        verticalLayout_5->addWidget(tvBooks);
 
 
         horizontalLayout_2->addLayout(verticalLayout_5);
@@ -190,11 +190,11 @@ public:
         horizontalLayout->setObjectName("horizontalLayout");
         verticalLayout_2 = new QVBoxLayout();
         verticalLayout_2->setObjectName("verticalLayout_2");
-        twReaders = new QTableWidget(verticalLayoutWidget_6);
-        twReaders->setObjectName("twReaders");
-        twReaders->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
+        tvReaders = new QTableView(verticalLayoutWidget_6);
+        tvReaders->setObjectName("tvReaders");
+        tvReaders->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
 
-        verticalLayout_2->addWidget(twReaders);
+        verticalLayout_2->addWidget(tvReaders);
 
 
         horizontalLayout->addLayout(verticalLayout_2);
@@ -267,11 +267,11 @@ public:
         horizontalLayout_3->setObjectName("horizontalLayout_3");
         verticalLayout_8 = new QVBoxLayout();
         verticalLayout_8->setObjectName("verticalLayout_8");
-        twEntries = new QTableWidget(verticalLayoutWidget_6);
-        twEntries->setObjectName("twEntries");
-        twEntries->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
+        tvEntries = new QTableView(verticalLayoutWidget_6);
+        tvEntries->setObjectName("tvEntries");
+        tvEntries->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
 
-        verticalLayout_8->addWidget(twEntries);
+        verticalLayout_8->addWidget(tvEntries);
 
 
         horizontalLayout_3->addLayout(verticalLayout_8);
@@ -339,10 +339,10 @@ public:
         QWidget::setTabOrder(btnReaderSearch, btnClearReaders);
         QWidget::setTabOrder(btnClearReaders, btnEntryCheckOut);
         QWidget::setTabOrder(btnEntryCheckOut, btnEntryCheckIn);
-        QWidget::setTabOrder(btnEntryCheckIn, twBooks);
-        QWidget::setTabOrder(twBooks, twReaders);
-        QWidget::setTabOrder(twReaders, btnClearEntries);
-        QWidget::setTabOrder(btnClearEntries, twEntries);
+        QWidget::setTabOrder(btnEntryCheckIn, tvBooks);
+        QWidget::setTabOrder(tvBooks, tvReaders);
+        QWidget::setTabOrder(tvReaders, btnClearEntries);
+        QWidget::setTabOrder(btnClearEntries, tvEntries);
 
         retranslateUi(MainWindow);
 

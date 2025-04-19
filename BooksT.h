@@ -5,6 +5,7 @@
 #include <QTableWidget>
 #include <iostream>
 #include <string>
+#include <QStandardItemModel>
 
 struct Book {
     std::string cipher; // NNN.MMM
@@ -56,7 +57,7 @@ public:
     Book *get(const std::string &cipher);
     bool remove(const std::string &cipher);
     void printTraversalList(const char *sep);
-    void fillTableWidget(QTableWidget *tableWidget, const std::string &filter = "");
+    void fillTableView(QTableView* tableView, QStandardItemModel* model, const std::string& filter = "");
 private:
     int heightR(Node* node);
     void eraseTreeR(Node*& cur);

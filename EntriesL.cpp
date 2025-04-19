@@ -215,21 +215,25 @@ void EntriesL::removeAllByCipher(const std::string& cipher) {
     }
 }
 
-void EntriesL::fillTableWidget(QTableWidget* tableWidget) {
-    if (!tableWidget) return;
+void EntriesL::fillTableView(QTableView *tableView, QStandardItemModel* model) {
+    if (!tableView) return;
 
-    tableWidget->setRowCount(0);
-    int row = 0;
+    model->clear();
+    model->setHorizontalHeaderLabels(QStringList() << "Номер билета" << "Шифр" << "Дата выдачи" << "Дата возврата");
 
-    Entry* current = head;
-    while (current) {
-        tableWidget->insertRow(row);
-        tableWidget->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(current->card)));
-        tableWidget->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(current->cipher)));
-        tableWidget->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(current->issueDate)));
-        tableWidget->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(current->returnDate)));
+    Entry* cur = head;
+    while (cur) {
+        QList<QVariant> row = {QString::fromStdString(cur->card), QString::fromStdString(cur->cipher),
+            QString::fromStdString(cur->issueDate), QString::fromStdString(cur->returnDate)};
 
-        row++;
-        current = current->next;
+        QList<QStandardItem*> items;
+        for (const auto &value : row) {
+            items.append(new QStandardItem(value.toString()));
+        }
+        model->appendRow(items);
+
+        cur = cur->next;
     }
+
+    tableView->setModel(model);
 }

@@ -35,25 +35,23 @@ void SearchBookDialog::btnSearch_clicked() {
 
     switch (curSearchType) {
     case BY_NAME_OR_AUTHOR:
-        ui->twBooks->setColumnCount(6);
-        ui->twBooks->setHorizontalHeaderLabels(QStringList{"Шифр", "Авторы", "Название", "Издательство", "Год публикации", "В наличии"});
-
-        books->fillTableWidget(ui->twBooks, input);
+        books->fillTableView(ui->tvBooks, &currentModel, input);
         break;
     case BY_CIPHER:
-        ui->twBooks->setColumnCount(6);
-        ui->twBooks->setHorizontalHeaderLabels(QStringList{"Шифр", "Авторы", "Название", "Издательство", "Год публикации", "В наличии"});
+        currentModel.clear();
+        currentModel.setHorizontalHeaderLabels(QStringList() << "Шифр" << "Авторы" << "Название" << "Издательство" << "Год публикации" << "В наличии" << "Имеющие книгу читатели");
 
-        ui->twBooks->setRowCount(0);
         const Book* book = books->get(input);
         if (book) {
-            ui->twBooks->insertRow(0);
-            ui->twBooks->setItem(0, 0, new QTableWidgetItem(QString::fromStdString(book->cipher)));
-            ui->twBooks->setItem(0, 1, new QTableWidgetItem(QString::fromStdString(book->authors)));
-            ui->twBooks->setItem(0, 2, new QTableWidgetItem(QString::fromStdString(book->name)));
-            ui->twBooks->setItem(0, 3, new QTableWidgetItem(QString::fromStdString(book->publisher)));
-            ui->twBooks->setItem(0, 4, new QTableWidgetItem(QString::number(book->pubYear)));
-            ui->twBooks->setItem(0, 5, new QTableWidgetItem(book->inStock == true ? QString("да") : QString("нет")));
+            QList<QVariant> row =
+                {QString::fromStdString(book->cipher), QString::fromStdString(book->authors),
+                 QString::fromStdString(book->name), QString::fromStdString(book->publisher),
+                 QString::number(book->pubYear), QString(book->inStock == true ? "да" : "нет")};
+
+            QList<QStandardItem*> items;
+            for (const auto &value : row) {
+                items.append(new QStandardItem(value.toString()));
+            }
 
             const std::string cardsString = entries->getCardsByCipher(book->cipher, true);
             std::string cardsAndFIOs = "";
@@ -72,12 +70,11 @@ void SearchBookDialog::btnSearch_clicked() {
                     cardsAndFIOs += card + "-\'" + readers->get(card)->fio + "\' ";
                 }
             }
-            ui->twBooks->setItem(0, 7, new QTableWidgetItem(QString::fromStdString(cardsAndFIOs)));
-
-        }
-        for (int column = 0; column < ui->twBooks->columnCount(); ++column) {
-            ui->twBooks->resizeColumnToContents(column);
+            items.append(new QStandardItem(QString::fromStdString(cardsAndFIOs)));
+            currentModel.appendRow(items);
+            ui->tvBooks->setModel(&currentModel);
         }
         break;
     }
+    ui->tvBooks->resizeColumnsToContents();
 }

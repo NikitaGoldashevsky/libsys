@@ -112,8 +112,11 @@ void ReadersHT::clear() {
     }
 }
 
-void ReadersHT::fillTableWidget(QTableWidget* tableWidget, const std::string& fioFilter) {
-    if (!tableWidget) return;
+void ReadersHT::fillTableView(QTableView* tableView, QStandardItemModel* model, const std::string& fioFilter) {
+    if (!tableView) return;
+
+    model->clear();
+    model->setHorizontalHeaderLabels(QStringList() << "Номер билета" << "ФИО" << "Год рождения" << "Адрес" << "Место работы");
 
     auto kmpSearch = [](const std::string& text, const std::string& pattern) -> bool {
         if (pattern.empty()) return true;
@@ -163,9 +166,6 @@ void ReadersHT::fillTableWidget(QTableWidget* tableWidget, const std::string& fi
         return false;
     };
 
-    tableWidget->setRowCount(0);
-    int row = 0;
-
     for (int i = 0; i < size; ++i) {
         HTVal* current = data[i];
 
@@ -173,20 +173,22 @@ void ReadersHT::fillTableWidget(QTableWidget* tableWidget, const std::string& fi
             if (current->reader != nullptr) {
                 Reader* reader = current->reader;
                 if (fioFilter.empty() || kmpSearch(reader->fio, fioFilter)) {
-                    tableWidget->insertRow(row);
-                    tableWidget->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(reader->card)));
-                    tableWidget->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(reader->fio)));
-                    tableWidget->setItem(row, 2, new QTableWidgetItem(QString::number(reader->birthYear)));
-                    tableWidget->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(reader->address)));
-                    tableWidget->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(reader->workplace)));
-                    row++;
+
+                    QList<QVariant> row =
+                        {QString::fromStdString(reader->card), QString::fromStdString(reader->fio),
+                         QString::number(reader->birthYear), QString::fromStdString(reader->address),
+                         QString::fromStdString(reader->workplace)};
+
+                    QList<QStandardItem*> items;
+                    for (const auto &value : row) {
+                        items.append(new QStandardItem(value.toString()));
+                    }
+                    model->appendRow(items);
                 }
             }
             current = current->next;  // Переход к следующему элементу цепочки
         }
     }
 
-    for (int column = 0; column < tableWidget->columnCount(); ++column) {
-        tableWidget->resizeColumnToContents(column);
-    }
+    tableView->setModel(model);
 }

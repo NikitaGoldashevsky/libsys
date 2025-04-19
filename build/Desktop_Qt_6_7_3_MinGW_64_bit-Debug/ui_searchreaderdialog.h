@@ -19,7 +19,7 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
-#include <QtWidgets/QTableWidget>
+#include <QtWidgets/QTableView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -37,7 +37,7 @@ public:
     QPushButton *btnSearch;
     QFrame *line;
     QLabel *label;
-    QTableWidget *twReaders;
+    QTableView *tvReaders;
 
     void setupUi(QDialog *SearchReaderDialog)
     {
@@ -88,11 +88,11 @@ public:
 
         verticalLayout->addWidget(label);
 
-        twReaders = new QTableWidget(verticalLayoutWidget);
-        twReaders->setObjectName("twReaders");
-        twReaders->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
+        tvReaders = new QTableView(verticalLayoutWidget);
+        tvReaders->setObjectName("tvReaders");
+        tvReaders->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
 
-        verticalLayout->addWidget(twReaders);
+        verticalLayout->addWidget(tvReaders);
 
 
         retranslateUi(SearchReaderDialog);

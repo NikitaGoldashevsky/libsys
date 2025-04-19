@@ -43,6 +43,8 @@ private:
 
     const QString inputPlaceholderCard = QString("Номер билета...");
     const QString inputPlaceholderFIO = QString("ФИО...");
+
+    QStandardItemModel currentModel;
 };
 
 #endif // SEARCHREADERDIALOG_H

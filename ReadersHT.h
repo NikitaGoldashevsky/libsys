@@ -4,6 +4,7 @@
 #include <string>
 #include <QDebug>
 #include <QTableWidget>
+#include <QStandardItemModel>
 
 struct Reader {
     std::string card; // ANNNN-YY
@@ -37,7 +38,7 @@ public:
     bool remove(const std::string& card);
     void log() const;
     void clear();
-    void fillTableWidget(QTableWidget *tableWidget, const std::string& fioFilter = "");
+    void fillTableView(QTableView *tableView, QStandardItemModel* model, const std::string& fioFilter = "");
 };
 
 #endif // READERSHT_H

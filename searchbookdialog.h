@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QString>
 #include <sstream>
+#include <QStandardItemModel>
 
 #include "mainwindow.h"
 #include "BooksT.h"
@@ -41,6 +42,8 @@ private:
     BooksT* books;
     ReadersHT* readers;
     EntriesL* entries;
+
+    QStandardItemModel currentModel;
 };
 
 #endif // SEARCHBOOKDIALOG_H
