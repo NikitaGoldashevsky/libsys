@@ -17,15 +17,7 @@ void EntriesL::add(const std::string& card, const std::string& cipher, const std
     tail = newEntry;
     sort();
 
-    // Notify observer if callback is set
-    if (onEntryAdded) {
-        onEntryAdded();
-    }
-}
-
-// Observer pattern
-void EntriesL::setOnEntryAdded(std::function<void()> callback) {
-    onEntryAdded = callback;
+    notifyObservers();
 }
 
 Entry* EntriesL::get(const std::string& card, const std::string& cipher) {
@@ -236,4 +228,18 @@ void EntriesL::fillTableView(QTableView *tableView, QStandardItemModel* model) {
     }
 
     tableView->setModel(model);
+}
+
+void EntriesL::notifyObservers() {
+    for (EntryObserver* observer : observers) {
+        observer->update();
+    }
+}
+
+void EntriesL::addObserver(EntryObserver* observer) {
+    observers.push_back(observer);
+}
+
+void EntriesL::removeObserver(EntryObserver* observer) {
+    observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
 }

@@ -7,37 +7,40 @@
 #include <QStandardItemModel>
 
 struct Reader {
-    std::string card; // ANNNN-YY
-    std::string fio;
-    int birthYear;
-    std::string address;
-    std::string workplace;
+    std::string card; // номер читательского билета (ANNNN-YY)
+    std::string fio; // фио читателя
+    int birthYear; // год рождения читателя
+    std::string address; // адрес проживания читателя
+    std::string workplace; // место работы (учебы) читателя
 };
 
+// в памяти компьютера читатели хранятся в виде хеш-таблицы с цепочками элементов
 struct HTVal {
-    Reader* reader;
+    Reader* reader; //
     std::string hashKey;
-    HTVal* next; // Указатель на следующий элемент
+    HTVal* next; // указатель на следующий элемент цепочки
 };
 
 class ReadersHT {
 private:
-    HTVal** data; // Массив указателей на начало цепочек
+    HTVal** data; // массив указателей на начало цепочек
     int size;
 
-    Reader* at(const int index) const;
+    Reader* at(const int index) const; // получение элемента по индексу (для внутреннего использования)
 
 public:
     ReadersHT(const int size);
     ~ReadersHT();
 
-    bool add(Reader* reader);
+    bool add(Reader* reader); // добавление читателя
     int hash(const std::string& str) const;
-    bool has(const std::string& card) const;
-    Reader* get(const std::string& card) const;
-    bool remove(const std::string& card);
+    bool has(const std::string& card) const; // проверка наличия читателя
+    Reader* get(const std::string& card) const; // получения указателя на объект читателя
+    bool remove(const std::string& card); // удаление читателя
     void log() const;
-    void clear();
+    void clear(); // очистка базы данных
+
+    // внесение данных о читателях в модель и отображение их в QTableView
     void fillTableView(QTableView *tableView, QStandardItemModel* model, const std::string& fioFilter = "");
 };
 

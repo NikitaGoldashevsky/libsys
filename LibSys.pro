@@ -27,6 +27,8 @@ SOURCES += \
 HEADERS += \
     BooksT.h \
     EntriesL.h \
+    EntryObserver.h \
+    MainWindowObserver.h \
     ReadersHT.h \
     TestsAll.h \
     TestsHashTable.h \

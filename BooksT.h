@@ -8,15 +8,14 @@
 #include <QStandardItemModel>
 
 struct Book {
-    std::string cipher; // NNN.MMM
-    std::string authors;
-    std::string name;
-    std::string publisher;
-    int pubYear;
-    // int copiesAll;
-    // int copiesStock;
-    bool inStock;
+    std::string cipher;     // уникальный шифр: NNN.MMM
+    std::string authors;    // ФИО автора(-ов)
+    std::string name;       // название книги
+    std::string publisher;  // издатель
+    int pubYear;            // год публикации
+    bool inStock;           // находится ли книга в библиотеке
 
+    // переопределение операторов сравнения для сравнения указателей на книги по шифрам книг
     bool operator==(const Book& other) const {
         return cipher == other.cipher;
     }
@@ -34,6 +33,7 @@ struct Book {
     }
 };
 
+// книги хранятся в памяти компьютера в виде бинарного дерева, Node - элемент дерева
 struct Node {
     Node* prev = nullptr;
     Node* left = nullptr;
@@ -46,19 +46,23 @@ class BooksT
 public:
     BooksT();
     int height();
-    void clear();
-    bool add(Book* book);
+    void clear(); // удаление всех книг
+    bool add(Book* book); // добавление книги
     void print();
     void printTraversalList();
-    bool remove(Book* book);
-    bool has(Book* book);
-    bool has(const std::string& cipher);
+    bool remove(Book* book); // удаление книги по указателю
+    bool has(Book* book); // проверка наличия книги по указателю
+    bool has(const std::string& cipher); // проверка наличия книги по шифру
 
-    Book *get(const std::string &cipher);
-    bool remove(const std::string &cipher);
+    Book *get(const std::string &cipher); // получение указателя на книгу
+    bool remove(const std::string &cipher); // удаление книги по шифру
     void printTraversalList(const char *sep);
+
+    // внесение данных о книгах в модель и отображение их в QTableView
     void fillTableView(QTableView* tableView, QStandardItemModel* model, const std::string& filter = "");
 private:
+
+    // рекурсивные реализации методов
     int heightR(Node* node);
     void eraseTreeR(Node*& cur);
     bool addElemR(Node*& root, Book* book);

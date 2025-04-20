@@ -20,6 +20,7 @@
 #include "ReadersHT.h"
 #include "EntriesL.h"
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -42,13 +43,13 @@ public:
     QStandardItemModel readersModel;
     QStandardItemModel entriesModel;
 
+    void updateTableViews();
+
 private:
     Ui::MainWindow *ui;
     BooksT books = BooksT();
     ReadersHT readers = ReadersHT(100);
     EntriesL entries = EntriesL();
-
-    void updateTableWidgets();
 
     const std::regex regexCard;
     const std::regex regexCipher;

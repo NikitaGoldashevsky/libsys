@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "MainWindowObserver.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -29,23 +30,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnEntryCheckIn, &QPushButton::clicked, this, &MainWindow::btnEntryCheckIn_clicked);
     connect(ui->btnClearEntries, &QPushButton::clicked, this, &MainWindow::btnClearEntries_clicked);
 
-    // Set observer callback for EntriesL
-    entries.setOnEntryAdded([this]() {
-        updateTableWidgets();
-    });
+    MainWindowObserver observer(this);
+    entries.addObserver(&observer);
 
     // Startup Data--------------
     books.add(new Book{"001.002", "Stephen King", "Billy summers", "Some American publisher idk", 2015, true});
     books.add(new Book{"001.001", "Thomas De Quincey", "Confessions of an English Opium-Eater", "Some British publisher idk", 1822, false});
 
-    readers.add(new Reader{"Ч0001-25", "David Lockridge", 1978, "Colorado", "Serial killer"});
-    readers.add(new Reader{"Ч0002-25", "John Smith", 1234, "Gallifrey", "Time traveller"});
+    readers.add(new Reader{"Ч0001-25", "David Lockridge", 1978, "Colorado", "Trump Tower"});
+    readers.add(new Reader{"Ч0002-25", "John Smith", 1234, "Gallifrey", "Whole time and space"});
 
     entries.add("Ч0001-25", "001.002", "21.03.2011", "25.03.2011");
     entries.add("Ч0002-25", "001.001", "27.03.2011", "-");
     // --------------------------
 
-    updateTableWidgets();
+    updateTableViews();
 }
 
 MainWindow::~MainWindow() {
@@ -90,7 +89,7 @@ void MainWindow::btnBookAdd_clicked() {
                     d->getCipher(), d->getAuthors(), d->getName(), d->getPublisher(),
                     d->getPublicationYear(), d->getInStock()
                 });
-                updateTableWidgets();
+                updateTableViews();
                 delete dialogPtr;
                 return;
             }
@@ -120,7 +119,7 @@ void MainWindow::btnBookRemove_clicked() {
             } else {
                 books.remove(cipher);
                 entries.removeAllByCipher(cipher);
-                updateTableWidgets();
+                updateTableViews();
             }
         } else {
             QMessageBox::critical(this, "Ошибка", "Книги с указанным шифром нет в базе данных!");
@@ -143,7 +142,7 @@ void MainWindow::btnReaderRemove_clicked() {
             } else {
                 readers.remove(card);
                 entries.removeAllByCard(card);
-                updateTableWidgets();
+                updateTableViews();
             }
         } else {
             QMessageBox::critical(this, "Ошибка", "Читателя с указанным номером билета нет в базе данных!");
@@ -170,7 +169,7 @@ void MainWindow::btnClearBooks_clicked() {
         books.clear();
         readers.clear();
         entries.clear();
-        updateTableWidgets();
+        updateTableViews();
 
     } else {
         int rowCount = ui->tvBooks->model()->rowCount();
@@ -189,7 +188,7 @@ void MainWindow::btnClearBooks_clicked() {
                 continue; // someone has the book, so it shouldnt be removed
             }
         }
-        updateTableWidgets();
+        updateTableViews();
     }
 }
 
@@ -228,7 +227,7 @@ void MainWindow::btnReaderAdd_clicked() {
                 readers.add(new Reader{
                     d.getCard(), d.getFIO(), d.getBirthYear(),
                     d.getAddress(), d.getWorkplace()});
-                updateTableWidgets();
+                updateTableViews();
                 return;
             }
             else {
@@ -259,7 +258,7 @@ void MainWindow::btnClearReaders_clicked() {
         books.clear();
         readers.clear();
         entries.clear();
-        updateTableWidgets();
+        updateTableViews();
 
     } else {
         int rowCount = ui->tvReaders->model()->rowCount();
@@ -278,7 +277,7 @@ void MainWindow::btnClearReaders_clicked() {
                 continue; // reader has some books, so he shouldnt be removed
             }
         }
-        updateTableWidgets();
+        updateTableViews();
     }
 }
 
@@ -303,7 +302,7 @@ void MainWindow::btnEntryCheckIn_clicked() {
             if (entry) {
                 entry->returnDate = d.getCheckInDate();
                 books.get(entry->cipher)->inStock = true;
-                updateTableWidgets();
+                updateTableViews();
                 return;
             }
             else {
@@ -350,7 +349,7 @@ void MainWindow::btnEntryCheckOut_clicked() {
 
             entries.add(card, cipher, d.getCheckOutDate(), NOT_RETURNED);
             book->inStock = false;
-            updateTableWidgets();
+            updateTableViews();
             return;
         }
         else {
@@ -377,7 +376,7 @@ void MainWindow::btnClearEntries_clicked() {
         books.clear();
         readers.clear();
         entries.clear();
-        updateTableWidgets();
+        updateTableViews();
 
     } else {
         int rowCount = ui->tvEntries->model()->rowCount();
@@ -400,11 +399,11 @@ void MainWindow::btnClearEntries_clicked() {
                 continue; // entry isnt closed, i.e. the book hasnt been returned yet
             }
         }
-        updateTableWidgets();
+        updateTableViews();
     }
 }
 
-void MainWindow::updateTableWidgets() {
+void MainWindow::updateTableViews() {
     books.fillTableView(ui->tvBooks, &booksModel);
     readers.fillTableView(ui->tvReaders, &readersModel);
     entries.fillTableView(ui->tvEntries, &entriesModel);
