@@ -10,6 +10,7 @@
 #define UI_SEARCHREADERDIALOG_H
 
 #include <QtCore/QVariant>
+#include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QFrame>
@@ -44,6 +45,8 @@ public:
         if (SearchReaderDialog->objectName().isEmpty())
             SearchReaderDialog->setObjectName("SearchReaderDialog");
         SearchReaderDialog->resize(414, 313);
+        QIcon icon(QIcon::fromTheme(QIcon::ThemeIcon::EditFind));
+        SearchReaderDialog->setWindowIcon(icon);
         verticalLayoutWidget = new QWidget(SearchReaderDialog);
         verticalLayoutWidget->setObjectName("verticalLayoutWidget");
         verticalLayoutWidget->setGeometry(QRect(20, 20, 371, 271));

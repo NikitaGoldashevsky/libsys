@@ -10,6 +10,7 @@
 #define UI_SEARCHBOOKDIALOG_H
 
 #include <QtCore/QVariant>
+#include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QFrame>
@@ -44,6 +45,8 @@ public:
         if (SearchBookDialog->objectName().isEmpty())
             SearchBookDialog->setObjectName("SearchBookDialog");
         SearchBookDialog->resize(411, 314);
+        QIcon icon(QIcon::fromTheme(QIcon::ThemeIcon::EditFind));
+        SearchBookDialog->setWindowIcon(icon);
         verticalLayoutWidget = new QWidget(SearchBookDialog);
         verticalLayoutWidget->setObjectName("verticalLayoutWidget");
         verticalLayoutWidget->setGeometry(QRect(20, 20, 371, 271));

@@ -37,8 +37,8 @@ MainWindow::MainWindow(QWidget *parent)
     books.add(new Book{"001.002", "Stephen King", "Billy summers", "Some American publisher idk", 2015, true});
     books.add(new Book{"001.001", "Thomas De Quincey", "Confessions of an English Opium-Eater", "Some British publisher idk", 1822, false});
 
-    readers.add(new Reader{"Ч0001-25", "David Lockridge", 1978, "Colorado", "Trump Tower"});
-    readers.add(new Reader{"Ч0002-25", "John Smith", 1234, "Gallifrey", "Whole time and space"});
+    readers.add(new Reader{"Ч0001-25", "David Lockridge", 1973, "Jersey City", "Crescent Hotel"});
+    readers.add(new Reader{"Ч0002-25", "John Smith", 1963, "Gallifrey", "Whole time and space"});
 
     entries.add("Ч0001-25", "001.002", "21.03.2011", "25.03.2011");
     entries.add("Ч0002-25", "001.001", "27.03.2011", "-");
@@ -264,7 +264,7 @@ void MainWindow::btnClearReaders_clicked() {
         int rowCount = ui->tvReaders->model()->rowCount();
 
         for (int row = 0; row < rowCount; ++row) {
-            QAbstractItemModel *model = ui->tvBooks->model();
+            QAbstractItemModel *model = ui->tvReaders->model();
             QVariant data = model->data(model->index(row, 0));
 
             const std::string card = data.toString().toStdString();
@@ -384,9 +384,9 @@ void MainWindow::btnClearEntries_clicked() {
         for (int row = 0; row < rowCount; ++row) {
             QAbstractItemModel *model = ui->tvEntries->model();
 
-            QVariant cipherData = model->data(model->index(row, 0));
+            QVariant cipherData = model->data(model->index(row, 1));
             QVariant cardData = model->data(model->index(row, 0));
-            QVariant returnDateData = model->data(model->index(row, 0));
+            QVariant returnDateData = model->data(model->index(row, 3));
 
             const std::string cipher = cipherData.toString().toStdString();
             const std::string card = cardData.toString().toStdString();
