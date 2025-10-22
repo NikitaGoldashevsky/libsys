@@ -30,18 +30,32 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnEntryCheckIn, &QPushButton::clicked, this, &MainWindow::btnEntryCheckIn_clicked);
     connect(ui->btnClearEntries, &QPushButton::clicked, this, &MainWindow::btnClearEntries_clicked);
 
-    MainWindowObserver observer(this);
-    entries.addObserver(&observer);
+    MainWindowObserver* observer = new MainWindowObserver(this);
+    entries.addObserver(observer);
+    qDebug() << "Создан наблюдатель: " << observer;
 
     // Startup Data--------------
+    if (!publishers.has("Some American publisher idk")) {
+        Publisher* p1 = new Publisher{"Some American publisher idk", "Unknown address", "unknown@pub.com"};
+        publishers.add(p1);
+    }
+    if (!publishers.has("Some British publisher idk")) {
+        Publisher* p2 = new Publisher{"Some British publisher idk", "Unknown address", "unknown@pub.co.uk"};
+        publishers.add(p2);
+    }
+
     books.add(new Book{"001.002", "Stephen King", "Billy summers", "Some American publisher idk", 2015, true});
     books.add(new Book{"001.001", "Thomas De Quincey", "Confessions of an English Opium-Eater", "Some British publisher idk", 1822, false});
 
     readers.add(new Reader{"Ч0001-25", "David Lockridge", 1973, "Jersey City", "Crescent Hotel"});
     readers.add(new Reader{"Ч0002-25", "John Smith", 1963, "Gallifrey", "Whole time and space"});
 
-    entries.add("Ч0001-25", "001.002", "21.03.2011", "25.03.2011");
-    entries.add("Ч0002-25", "001.001", "27.03.2011", "-");
+    librarians.add(new Librarian{"L001", "Анна Сергеевна", "Библиотекарь", "Утренняя"});
+    librarians.add(new Librarian{"L002", "Ольга Ивановна", "Старший библиотекарь", "Вечерняя"});
+    currentLibrarian = librarians.get("L001");
+
+    entries.add("Ч0001-25", "001.002", "21.03.2011", "25.03.2011", "L001");
+    entries.add("Ч0002-25", "001.001", "27.03.2011", "-", "L002");
     // --------------------------
 
     updateTableViews();
@@ -51,6 +65,9 @@ MainWindow::~MainWindow() {
     books.clear();
     readers.clear();
     entries.clear();
+    librarians.clear();
+    publishers.clear();
+    fines.clear();
     delete ui;
 }
 
@@ -89,6 +106,13 @@ void MainWindow::btnBookAdd_clicked() {
                     d->getCipher(), d->getAuthors(), d->getName(), d->getPublisher(),
                     d->getPublicationYear(), d->getInStock()
                 });
+                // new
+                const std::string pubName = d->getPublisher();
+                if (!publishers.has(pubName)) {
+                    Publisher* newPub = new Publisher{pubName, "", ""};
+                    publishers.add(newPub);
+                }
+                // --new
                 updateTableViews();
                 delete dialogPtr;
                 return;
@@ -347,7 +371,14 @@ void MainWindow::btnEntryCheckOut_clicked() {
                 continue;
             }
 
-            entries.add(card, cipher, d.getCheckOutDate(), NOT_RETURNED);
+            entries.add(card, cipher, d.getCheckOutDate(), NOT_RETURNED,
+                        currentLibrarian ? currentLibrarian->id : "");
+
+            // Добавляем ID библиотекаря в запись
+            if (currentLibrarian) {
+                qDebug() << "Выдачу оформил библиотекарь:" << QString::fromStdString(currentLibrarian->fio);
+            }
+
             book->inStock = false;
             updateTableViews();
             return;
@@ -403,6 +434,82 @@ void MainWindow::btnClearEntries_clicked() {
     }
 }
 
+void MainWindow::on_btnFineImpose_clicked()
+{
+    FineDialog d(this);
+    if (d.exec() == QDialog::Accepted)
+    {
+        QString id = d.getId();
+        QString card = d.getCard();
+        QString cipher = d.getCipher();
+        QString reason = d.getReason();
+        double amount = d.getAmount();
+
+        // Проверка на заполненность
+        if (id.isEmpty() || card.isEmpty() || cipher.isEmpty()) {
+            QMessageBox::warning(this, "Ошибка", "Поля ID, билет и шифр обязательны!");
+            return;
+        }
+
+        // Проверка на уникальность ID штрафа
+        if (fines.get(id.toStdString())) {
+            QMessageBox::warning(this, "Ошибка", "Штраф с таким ID уже существует!");
+            return;
+        }
+
+        // Проверка, что читатель существует
+        if (!readers.has(card.toStdString())) {
+            QMessageBox::warning(this, "Ошибка", "Читатель с таким номером билета не найден!");
+            return;
+        }
+
+        // Проверка, что книга существует
+        if (!books.has(cipher.toStdString())) {
+            QMessageBox::warning(this, "Ошибка", "Книга с таким шифром не найдена!");
+            return;
+        }
+
+        // Если все проверки пройдены — создаём штраф
+        Fine* f = new Fine{
+            id.toStdString(),
+            card.toStdString(),
+            cipher.toStdString(),
+            amount,
+            reason.toStdString(),
+            false
+        };
+
+        fines.add(f);
+        fines.fillTableView(ui->tvFines, &finesModel);
+
+        QMessageBox::information(this, "Штраф добавлен",
+                                 "Штраф успешно добавлен в базу данных.");
+    }
+}
+
+void MainWindow::on_btnFinePayIn_clicked()
+{
+    auto selection = ui->tvFines->selectionModel()->selectedRows();
+    if (selection.isEmpty()) {
+        QMessageBox::information(this, "Инфо", "Выберите штраф для оплаты.");
+        return;
+    }
+
+    QModelIndex index = selection.first();
+    QString fineId = ui->tvFines->model()->data(ui->tvFines->model()->index(index.row(), 0)).toString();
+
+    Fine* fine = fines.get(fineId.toStdString());
+    if (!fine) {
+        QMessageBox::warning(this, "Ошибка", "Не удалось найти выбранный штраф.");
+        return;
+    }
+
+    fine->paid = true;
+    QMessageBox::information(this, "Оплата", "Штраф успешно отмечен как оплаченный.");
+
+    fines.fillTableView(ui->tvFines, &finesModel);
+}
+
 void MainWindow::updateTableViews() {
     books.fillTableView(ui->tvBooks, &booksModel);
     readers.fillTableView(ui->tvReaders, &readersModel);
@@ -411,6 +518,7 @@ void MainWindow::updateTableViews() {
     for (const auto tv : {ui->tvBooks, ui->tvReaders, ui->tvEntries}) {
         tv->resizeColumnsToContents();
     }
+    fines.fillTableView(ui->tvFines, &finesModel);
 }
 
 void MainWindow::btnReaderSearch_clicked() {

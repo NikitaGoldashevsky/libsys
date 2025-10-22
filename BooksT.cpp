@@ -390,10 +390,9 @@ bool BooksT::has(Book* book) {
 
 bool BooksT::has(const std::string &cipher)
 {
-    if (get(cipher) != nullptr) {
-        return true;
-    }
+    return get(cipher) != nullptr;
 }
+
 
 bool BooksT::hasElemR(Node* cur, Book* book) {
     if (!cur) {

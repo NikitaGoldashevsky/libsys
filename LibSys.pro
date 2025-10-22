@@ -11,6 +11,10 @@ CONFIG += c++17
 SOURCES += \
     BooksT.cpp \
     EntriesL.cpp \
+    FineDialog.cpp \
+    FinesL.cpp \
+    LibrariansHT.cpp \
+    PublishersHT.cpp \
     ReadersHT.cpp \
     addbookdialog.cpp \
     addentrydialog.cpp \
@@ -28,7 +32,14 @@ HEADERS += \
     BooksT.h \
     EntriesL.h \
     EntryObserver.h \
+    Fine.h \
+    FineDialog.h \
+    FinesL.h \
+    Librarian.h \
+    LibrariansHT.h \
     MainWindowObserver.h \
+    Publisher.h \
+    PublishersHT.h \
     ReadersHT.h \
     TestsAll.h \
     TestsHashTable.h \
@@ -46,6 +57,7 @@ HEADERS += \
     searchreaderdialog.h
 
 FORMS += \
+    FineDialog.ui \
     addbookdialog.ui \
     addentrydialog.ui \
     addreaderdialog.ui \

@@ -20,6 +20,7 @@ struct Entry {
     std::string cipher; // шифр взятой книги
     std::string issueDate; // дата взятия книги
     std::string returnDate; // дата возврата книги
+    std::string librarianId; // ID библиотекаря, оформившего запись
 };
 
 class EntriesL {
@@ -27,7 +28,7 @@ public:
     EntriesL();
     ~EntriesL();
 
-    void add(const std::string& card, const std::string& cipher, const std::string& issueDate, const std::string& returnDate); // добавление записи в базу данных
+    void add(const std::string& card, const std::string& cipher, const std::string& issueDate, const std::string& returnDate, const std::string& librarianId = "");
     Entry* get(const std::string& card, const std::string& cipher); // получение указателя на объект записи
     void print() const;
     void clear(); // удаление всех записей

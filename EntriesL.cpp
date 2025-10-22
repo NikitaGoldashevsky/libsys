@@ -7,8 +7,8 @@ EntriesL::~EntriesL() {
     clear();
 }
 
-void EntriesL::add(const std::string& card, const std::string& cipher, const std::string& issueDate, const std::string& returnDate) {
-    Entry* newEntry = new Entry{ nullptr, tail, card, cipher, issueDate, returnDate };
+void EntriesL::add(const std::string& card, const std::string& cipher, const std::string& issueDate, const std::string& returnDate, const std::string& librarianId) {
+    Entry* newEntry = new Entry{ nullptr, tail, card, cipher, issueDate, returnDate, librarianId };
     if (tail) {
         tail->next = newEntry;
     } else {
@@ -16,7 +16,6 @@ void EntriesL::add(const std::string& card, const std::string& cipher, const std
     }
     tail = newEntry;
     sort();
-
     notifyObservers();
 }
 
@@ -211,12 +210,12 @@ void EntriesL::fillTableView(QTableView *tableView, QStandardItemModel* model) {
     if (!tableView) return;
 
     model->clear();
-    model->setHorizontalHeaderLabels(QStringList() << "Номер билета" << "Шифр" << "Дата выдачи" << "Дата возврата");
+    model->setHorizontalHeaderLabels(QStringList() << "Номер билета" << "Шифр" << "Дата выдачи" << "Дата возврата" << "Id библиотекаря");
 
     Entry* cur = head;
     while (cur) {
         QList<QVariant> row = {QString::fromStdString(cur->card), QString::fromStdString(cur->cipher),
-            QString::fromStdString(cur->issueDate), QString::fromStdString(cur->returnDate)};
+            QString::fromStdString(cur->issueDate), QString::fromStdString(cur->returnDate), QString::fromStdString(cur->librarianId)};
 
         QList<QStandardItem*> items;
         for (const auto &value : row) {
@@ -231,8 +230,16 @@ void EntriesL::fillTableView(QTableView *tableView, QStandardItemModel* model) {
 }
 
 void EntriesL::notifyObservers() {
+    qDebug() << "Уведомление наблюдателей. Количество:" << observers.size() << observers[0];
     for (EntryObserver* observer : observers) {
-        observer->update();
+        if (observer != nullptr) {
+            try {
+                observer->update();
+            }
+            catch (...) {qDebug() << "нулевой наблюдатель: " << observer; return;};
+        } else {
+            qDebug() << "Обнаружен нулевой наблюдатель!";
+        }
     }
 }
 
