@@ -1,14 +1,8 @@
-// FinesL.h
-#ifndef FINESL_H
-#define FINESL_H
-
+#include "FineDecorator.h"
 #include "Fine.h"
-#include <QTableView>
-#include <QStandardItemModel>
-#include <QDebug>
 
 struct FineNode {
-    Fine* fine;
+    FineDecorator* fine;  // ← теперь это декоратор
     FineNode* next;
     FineNode* prev;
 };
@@ -17,16 +11,12 @@ class FinesL {
 public:
     FinesL();
     ~FinesL();
-
-    void add(Fine* fine);
+    void add(FineDecorator* fine);  // ← принимает декоратор
+    FineDecorator* get(const std::string& id) const;
     void remove(const std::string& id);
-    Fine* get(const std::string& id) const;
     void clear();
     void fillTableView(QTableView* tableView, QStandardItemModel* model);
-
 private:
-    FineNode* head;
-    FineNode* tail;
+    FineNode* head = nullptr;
+    FineNode* tail = nullptr;
 };
-
-#endif // FINESL_H

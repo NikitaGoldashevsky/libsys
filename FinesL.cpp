@@ -7,7 +7,7 @@ FinesL::~FinesL() {
     clear();
 }
 
-void FinesL::add(Fine* fine) {
+void FinesL::add(FineDecorator* fine) {
     if (!fine) return;
     FineNode* node = new FineNode{fine, nullptr, tail};
     if (tail) tail->next = node;
@@ -18,7 +18,7 @@ void FinesL::add(Fine* fine) {
 void FinesL::remove(const std::string& id) {
     FineNode* cur = head;
     while (cur) {
-        if (cur->fine->id == id) {
+        if (cur->fine->getId() == id) {
             if (cur->prev) cur->prev->next = cur->next;
             else head = cur->next;
             if (cur->next) cur->next->prev = cur->prev;
@@ -31,10 +31,10 @@ void FinesL::remove(const std::string& id) {
     }
 }
 
-Fine* FinesL::get(const std::string& id) const {
+FineDecorator* FinesL::get(const std::string& id) const {
     FineNode* cur = head;
     while (cur) {
-        if (cur->fine->id == id)
+        if (cur->fine->getId() == id)
             return cur->fine;
         cur = cur->next;
     }
@@ -62,12 +62,12 @@ void FinesL::fillTableView(QTableView* tableView, QStandardItemModel* model) {
     FineNode* cur = head;
     while (cur) {
         QList<QVariant> row = {
-            QString::fromStdString(cur->fine->id),
-            QString::fromStdString(cur->fine->card),
-            QString::fromStdString(cur->fine->cipher),
-            QString::number(cur->fine->amount),
-            QString::fromStdString(cur->fine->reason),
-            cur->fine->paid ? "да" : "нет"
+            QString::fromStdString(cur->fine->getId()),
+            QString::fromStdString(cur->fine->getCard()),
+            QString::fromStdString(cur->fine->getCipher()),
+            QString::number(cur->fine->getAmount()),
+            QString::fromStdString(cur->fine->getReason()),
+            cur->fine->isPaid() ? "да" : "нет"
         };
         QList<QStandardItem*> items;
         for (const auto &val : row) items.append(new QStandardItem(val.toString()));

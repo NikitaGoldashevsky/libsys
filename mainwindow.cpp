@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "MainWindowObserver.h"
 #include "PublisherBuilder.h"
+#include "Fine.h"
 #include <QInputDialog>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -484,45 +485,40 @@ void MainWindow::on_btnFineImpose_clicked()
         QString reason = d.getReason();
         double amount = d.getAmount();
 
-        // Проверка на заполненность
         if (id.isEmpty() || card.isEmpty() || cipher.isEmpty()) {
             QMessageBox::warning(this, "Ошибка", "Поля ID, билет и шифр обязательны!");
             return;
         }
-
-        // Проверка на уникальность ID штрафа
         if (fines.get(id.toStdString())) {
             QMessageBox::warning(this, "Ошибка", "Штраф с таким ID уже существует!");
             return;
         }
-
-        // Проверка, что читатель существует
         if (!readers.has(card.toStdString())) {
-            QMessageBox::warning(this, "Ошибка", "Читатель с таким номером билета не найден!");
+            QMessageBox::warning(this, "Ошибка", "Читатель не найден!");
             return;
         }
-
-        // Проверка, что книга существует
         if (!books.has(cipher.toStdString())) {
-            QMessageBox::warning(this, "Ошибка", "Книга с таким шифром не найдена!");
+            QMessageBox::warning(this, "Ошибка", "Книга не найдена!");
             return;
         }
 
-        // Если все проверки пройдены — создаём штраф
-        Fine* f = new Fine{
+        Entry* entry = entries.get(card.toStdString(), cipher.toStdString());
+        if (!entry) {
+            QMessageBox::warning(this, "Ошибка", "Запись о выдаче не найдена!");
+            return;
+        }
+
+        FineDecorator* fine = new FineDecorator(
+            entry,
             id.toStdString(),
-            card.toStdString(),
-            cipher.toStdString(),
             amount,
             reason.toStdString(),
             false
-        };
+            );
 
-        fines.add(f);
+        fines.add(fine);
         fines.fillTableView(ui->tvFines, &finesModel);
-
-        QMessageBox::information(this, "Штраф добавлен",
-                                 "Штраф успешно добавлен в базу данных.");
+        QMessageBox::information(this, "Штраф добавлен", "Штраф успешно добавлен.");
     }
 }
 
@@ -537,13 +533,13 @@ void MainWindow::on_btnFinePayIn_clicked()
     QModelIndex index = selection.first();
     QString fineId = ui->tvFines->model()->data(ui->tvFines->model()->index(index.row(), 0)).toString();
 
-    Fine* fine = fines.get(fineId.toStdString());
+    FineDecorator* fine = fines.get(fineId.toStdString());  // ← изменено: FineDecorator*
     if (!fine) {
         QMessageBox::warning(this, "Ошибка", "Не удалось найти выбранный штраф.");
         return;
     }
 
-    fine->paid = true;
+    fine->setPaid(true);  // ← используем геттер/сеттер, а не прямой доступ к полю
     QMessageBox::information(this, "Оплата", "Штраф успешно отмечен как оплаченный.");
 
     fines.fillTableView(ui->tvFines, &finesModel);

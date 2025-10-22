@@ -8,7 +8,7 @@ EntriesL::~EntriesL() {
 }
 
 void EntriesL::add(const std::string& card, const std::string& cipher, const std::string& issueDate, const std::string& returnDate, const std::string& librarianId) {
-    Entry* newEntry = new Entry{ nullptr, tail, card, cipher, issueDate, returnDate, librarianId };
+    Entry* newEntry = new Entry(nullptr, tail, card, cipher, issueDate, returnDate, librarianId);
     if (tail) {
         tail->next = newEntry;
     } else {

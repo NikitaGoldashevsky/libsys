@@ -33,8 +33,10 @@ HEADERS += \
     EntriesL.h \
     EntryObserver.h \
     Fine.h \
+    FineDecorator.h \
     FineDialog.h \
     FinesL.h \
+    IEntryComponent.h \
     Librarian.h \
     LibrariansHT.h \
     MainWindowObserver.h \

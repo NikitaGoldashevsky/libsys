@@ -8,19 +8,45 @@
 #include <QStandardItemModel>
 
 #include "EntryObserver.h"
+#include "IEntryComponent.h"
 
 const static std::string NOT_RETURNED = "-"; // значения по умолчанию поля, содержащего дату возврата книги
 
-// хранение указателей в памяти реализовано в виде линейного двунаправленного списка
-struct Entry {
-    Entry* next;
-    Entry* prev;
+#include "IEntryComponent.h"
 
-    std::string card; // номер билета читателя, взявшего книгу
-    std::string cipher; // шифр взятой книги
-    std::string issueDate; // дата взятия книги
-    std::string returnDate; // дата возврата книги
-    std::string librarianId; // ID библиотекаря, оформившего запись
+class Entry : public IEntryComponent {
+public:
+    Entry* next = nullptr;
+    Entry* prev = nullptr;
+
+    std::string card;
+    std::string cipher;
+    std::string issueDate;
+    std::string returnDate;
+    std::string librarianId;
+
+    Entry(Entry* next, Entry* prev,
+          const std::string& card,
+          const std::string& cipher,
+          const std::string& issueDate,
+          const std::string& returnDate,
+          const std::string& librarianId)
+        : next(next), prev(prev),
+        card(card), cipher(cipher),
+        issueDate(issueDate), returnDate(returnDate),
+        librarianId(librarianId)
+    {}
+
+    // Реализация интерфейса
+    std::string getCard() const override { return card; }
+    std::string getCipher() const override { return cipher; }
+    std::string getIssueDate() const override { return issueDate; }
+    std::string getReturnDate() const override { return returnDate; }
+    std::string getLibrarianId() const override { return librarianId; }
+
+    void print() const override {
+        qDebug() << "Entry:" << QString::fromStdString(card) << cipher.c_str();
+    }
 };
 
 class EntriesL {
