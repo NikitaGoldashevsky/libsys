@@ -45,7 +45,7 @@ void SearchBookDialog::btnSearch_clicked() {
         if (book) {
             QList<QVariant> row =
                 {QString::fromStdString(book->cipher), QString::fromStdString(book->authors),
-                 QString::fromStdString(book->name), QString::fromStdString(book->publisher),
+                 QString::fromStdString(book->name), QString::fromStdString(book->publisher->name),
                  QString::number(book->pubYear), QString(book->inStock == true ? "да" : "нет")};
 
             QList<QStandardItem*> items;

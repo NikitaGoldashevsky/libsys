@@ -39,6 +39,7 @@ HEADERS += \
     LibrariansHT.h \
     MainWindowObserver.h \
     Publisher.h \
+    PublisherBuilder.h \
     PublishersHT.h \
     ReadersHT.h \
     TestsAll.h \

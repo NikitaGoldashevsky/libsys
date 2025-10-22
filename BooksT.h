@@ -7,13 +7,15 @@
 #include <string>
 #include <QStandardItemModel>
 
+#include "Publisher.h"
+
 struct Book {
-    std::string cipher;     // уникальный шифр: NNN.MMM
-    std::string authors;    // ФИО автора(-ов)
-    std::string name;       // название книги
-    std::string publisher;  // издатель
-    int pubYear;            // год публикации
-    bool inStock;           // находится ли книга в библиотеке
+    std::string cipher;
+    std::string authors;
+    std::string name;
+    Publisher* publisher;   // ← указатель
+    int pubYear;
+    bool inStock;
 
     // переопределение операторов сравнения для сравнения указателей на книги по шифрам книг
     bool operator==(const Book& other) const {

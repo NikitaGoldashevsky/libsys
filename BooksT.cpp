@@ -267,7 +267,7 @@ void BooksT::fillTableView(QTableView* tableView, QStandardItemModel* model, con
 
             QList<QVariant> row =
                 {QString::fromStdString(cur->book->cipher), QString::fromStdString(cur->book->authors),
-                                    QString::fromStdString(cur->book->name), QString::fromStdString(cur->book->publisher),
+                                   QString::fromStdString(cur->book->name), QString::fromStdString(cur->book->publisher->name)+QString(" | ")+QString::fromStdString(cur->book->publisher->address)+QString(" | ")+QString::fromStdString(cur->book->publisher->contactInfo),
                                     QString::number(cur->book->pubYear), QString(cur->book->inStock == true ? "да" : "нет")};
 
             QList<QStandardItem*> items;

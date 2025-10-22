@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "MainWindowObserver.h"
+#include "PublisherBuilder.h"
+#include <QInputDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -44,8 +46,11 @@ MainWindow::MainWindow(QWidget *parent)
         publishers.add(p2);
     }
 
-    books.add(new Book{"001.002", "Stephen King", "Billy summers", "Some American publisher idk", 2015, true});
-    books.add(new Book{"001.001", "Thomas De Quincey", "Confessions of an English Opium-Eater", "Some British publisher idk", 1822, false});
+    Publisher* p1 = publishers.get("Some American publisher idk");
+    Publisher* p2 = publishers.get("Some British publisher idk");
+
+    books.add(new Book{"001.002", "Stephen King", "Billy summers", p1, 2015, true});
+    books.add(new Book{"001.001", "Thomas De Quincey", "Confessions of an English Opium-Eater", p2, 1822, false});
 
     readers.add(new Reader{"Ч0001-25", "David Lockridge", 1973, "Jersey City", "Crescent Hotel"});
     readers.add(new Reader{"Ч0002-25", "John Smith", 1963, "Gallifrey", "Whole time and space"});
@@ -102,17 +107,51 @@ void MainWindow::btnBookAdd_clicked() {
             }
 
             if (!books.has(d->getCipher())) {
-                books.add(new Book{
-                    d->getCipher(), d->getAuthors(), d->getName(), d->getPublisher(),
-                    d->getPublicationYear(), d->getInStock()
-                });
-                // new
                 const std::string pubName = d->getPublisher();
-                if (!publishers.has(pubName)) {
-                    Publisher* newPub = new Publisher{pubName, "", ""};
-                    publishers.add(newPub);
+                Publisher* pub = publishers.get(pubName);
+
+                if (!pub) {
+                    // Запрашиваем недостающие данные у пользователя
+                    bool ok1, ok2;
+                    QString address = QInputDialog::getText(
+                        this, "Адрес издательства",
+                        "Введите адрес издательства \"" + QString::fromStdString(pubName) + "\":",
+                        QLineEdit::Normal, "", &ok1
+                        );
+                    if (!ok1) {
+                        delete dialogPtr;
+                        return;
+                    }
+                    QString contactInfo = QInputDialog::getText(
+                        this, "Контактная информация",
+                        "Введите телефон или email издательства \"" + QString::fromStdString(pubName) + "\":",
+                        QLineEdit::Normal, "", &ok2
+                        );
+                    if (!ok2) {
+                        delete dialogPtr;
+                        return;
+                    }
+
+                    // Создаём через Builder — это и есть реализация паттерна
+                    pub = PublisherBuilder()
+                              .setName(pubName)
+                              .setAddress(address.toStdString())
+                              .setContactInfo(contactInfo.toStdString())
+                              .build();
+
+                    publishers.add(pub);
                 }
-                // --new
+
+                // Теперь добавляем книгу с уже существующим или новым издательством
+                books.add(new Book{
+                    d->getCipher(),
+                    d->getAuthors(),
+                    d->getName(),
+                    pub,
+                    d->getPublicationYear(),
+                    d->getInStock()
+                });
+
                 updateTableViews();
                 delete dialogPtr;
                 return;
