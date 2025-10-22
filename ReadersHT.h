@@ -21,6 +21,11 @@ struct HTVal {
     HTVal* next; // указатель на следующий элемент цепочки
 };
 
+struct SearchStrategy {
+    virtual ~SearchStrategy() = default;
+    virtual bool matches(const std::string& text, const std::string& pattern) const = 0;
+};
+
 class ReadersHT {
 private:
     HTVal** data; // массив указателей на начало цепочек
@@ -41,7 +46,8 @@ public:
     void clear(); // очистка базы данных
 
     // внесение данных о читателях в модель и отображение их в QTableView
-    void fillTableView(QTableView *tableView, QStandardItemModel* model, const std::string& fioFilter = "");
+    void fillTableView(QTableView *tableView, QStandardItemModel* model,
+                       const std::string& filter = "", bool byCard = false);
 };
 
 #endif // READERSHT_H

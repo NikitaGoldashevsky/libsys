@@ -32,36 +32,12 @@ void SearchReaderDialog::rbByFIO_clicked() {
 
 void SearchReaderDialog::btnSearch_clicked() {
     const std::string input = ui->leInput->text().toStdString();
-
     switch (curSearchType) {
     case BY_FIO:
-        readers->fillTableView(ui->tvReaders, &currentModel, input);
+        readers->fillTableView(ui->tvReaders, &currentModel, input, false); // ← false = по ФИО → KMP
         break;
     case BY_CARD:
-        currentModel.clear();
-        currentModel.setHorizontalHeaderLabels(QStringList() << "Номер билета" << "ФИО" << "Год рождения" << "Адрес" << "Место работы" << "Выданные читателю книги");
-
-        const Reader* reader = readers->get(input);
-        if (reader) {
-            QList<QVariant> row =
-                {QString::fromStdString(reader->card), QString::fromStdString(reader->fio),
-                 QString::number(reader->birthYear), QString::fromStdString(reader->address),
-                 QString::fromStdString(reader->workplace)};
-
-            QList<QStandardItem*> items;
-            for (const auto &value : row) {
-                items.append(new QStandardItem(value.toString()));
-            }
-
-            std::string ciphersString = entries->getCiphersByCard(reader->card, true);
-            if (ciphersString.empty()) {
-                ciphersString = "-";
-            }
-
-            items.append(new QStandardItem(QString::fromStdString(ciphersString)));
-            currentModel.appendRow(items);
-            ui->tvReaders->setModel(&currentModel);
-        }
+        readers->fillTableView(ui->tvReaders, &currentModel, input, true);  // ← true = по card → exact
         break;
     }
     ui->tvReaders->resizeColumnsToContents();

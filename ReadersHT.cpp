@@ -112,27 +112,29 @@ void ReadersHT::clear() {
     }
 }
 
-void ReadersHT::fillTableView(QTableView* tableView, QStandardItemModel* model, const std::string& fioFilter) {
-    if (!tableView) return;
+// ReadersHT.cpp — добавить перед fillTableView
 
-    model->clear();
-    model->setHorizontalHeaderLabels(QStringList() << "Номер билета" << "ФИО" << "Год рождения" << "Адрес" << "Место работы");
+struct ExactMatchStrategy : public SearchStrategy {
+    bool matches(const std::string& text, const std::string& pattern) const override {
+        return text == pattern; // card уникален → точное совпадение
+    }
+};
 
-    auto kmpSearch = [](const std::string& text, const std::string& pattern) -> bool {
+struct KMPStrategy : public SearchStrategy {
+    bool matches(const std::string& text, const std::string& pattern) const override {
         if (pattern.empty()) return true;
 
         auto toLower = [](const std::string& str) {
             std::string res = str;
-            for (auto& ch : res) ch = std::tolower(ch);
+            for (auto& ch : res) ch = std::tolower(static_cast<unsigned char>(ch));
             return res;
         };
 
         std::string lowerText = toLower(text);
         std::string lowerPattern = toLower(pattern);
 
+        // Построение LPS-массива
         int m = lowerPattern.size();
-        int n = lowerText.size();
-
         std::vector<int> lps(m, 0);
         int len = 0, i = 1;
         while (i < m) {
@@ -145,50 +147,66 @@ void ReadersHT::fillTableView(QTableView* tableView, QStandardItemModel* model, 
             }
         }
 
-        i = 0;
-        int j = 0;
+        // Поиск
+        i = 0; // индекс для text
+        int j = 0; // индекс для pattern
+        int n = lowerText.size();
         while (i < n) {
             if (lowerPattern[j] == lowerText[i]) {
                 i++; j++;
             }
-
             if (j == m) {
                 return true;
             } else if (i < n && lowerPattern[j] != lowerText[i]) {
-                if (j != 0) {
-                    j = lps[j - 1];
-                } else {
-                    i++;
-                }
+                if (j != 0) j = lps[j - 1];
+                else i++;
             }
         }
-
         return false;
-    };
+    }
+};
+
+void ReadersHT::fillTableView(QTableView* tableView, QStandardItemModel* model, const std::string& filter, bool byCard) {
+    if (!tableView) return;
+
+    model->clear();
+    model->setHorizontalHeaderLabels(QStringList() << "Номер билета" << "ФИО" << "Год рождения" << "Адрес" << "Место работы");
+
+    std::unique_ptr<SearchStrategy> strategy;
+    if (byCard) {
+        strategy = std::make_unique<ExactMatchStrategy>();
+    } else {
+        strategy = std::make_unique<KMPStrategy>();
+    }
 
     for (int i = 0; i < size; ++i) {
         HTVal* current = data[i];
-
-        while (current) {  // Проход по цепочке
+        while (current) {
             if (current->reader != nullptr) {
                 Reader* reader = current->reader;
-                if (fioFilter.empty() || kmpSearch(reader->fio, fioFilter)) {
-
-                    QList<QVariant> row =
-                        {QString::fromStdString(reader->card), QString::fromStdString(reader->fio),
-                         QString::number(reader->birthYear), QString::fromStdString(reader->address),
-                         QString::fromStdString(reader->workplace)};
-
+                bool match = false;
+                if (byCard) {
+                    match = strategy->matches(reader->card, filter);
+                } else {
+                    match = strategy->matches(reader->fio, filter);
+                }
+                if (filter.empty() || match) {
+                    QList<QVariant> row = {
+                        QString::fromStdString(reader->card),
+                        QString::fromStdString(reader->fio),
+                        QString::number(reader->birthYear),
+                        QString::fromStdString(reader->address),
+                        QString::fromStdString(reader->workplace)
+                    };
                     QList<QStandardItem*> items;
-                    for (const auto &value : row) {
+                    for (const auto& value : row) {
                         items.append(new QStandardItem(value.toString()));
                     }
                     model->appendRow(items);
                 }
             }
-            current = current->next;  // Переход к следующему элементу цепочки
+            current = current->next;
         }
     }
-
     tableView->setModel(model);
 }
