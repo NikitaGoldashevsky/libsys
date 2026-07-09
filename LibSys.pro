@@ -4,60 +4,59 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
 
-# You can make your code fail to compile if it uses deprecated APIs.
-# In order to do so, uncomment the following line.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+INCLUDEPATH += include
+DEPENDPATH += include src
 
 SOURCES += \
-    BooksT.cpp \
-    EntriesL.cpp \
-    FineDialog.cpp \
-    FinesL.cpp \
-    LibrariansHT.cpp \
-    PublishersHT.cpp \
-    ReadersHT.cpp \
-    addbookdialog.cpp \
-    addentrydialog.cpp \
-    addreaderdialog.cpp \
-    closeentrydialog.cpp \
-    dialogfactory.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    removebookdialog.cpp \
-    removereaderdialog.cpp \
-    searchbookdialog.cpp \
-    searchreaderdialog.cpp
+    src/BooksT.cpp \
+    src/EntriesL.cpp \
+    src/FineDialog.cpp \
+    src/FinesL.cpp \
+    src/LibrariansHT.cpp \
+    src/PublishersHT.cpp \
+    src/ReadersHT.cpp \
+    src/addbookdialog.cpp \
+    src/addentrydialog.cpp \
+    src/addreaderdialog.cpp \
+    src/closeentrydialog.cpp \
+    src/dialogfactory.cpp \
+    src/main.cpp \
+    src/mainwindow.cpp \
+    src/removebookdialog.cpp \
+    src/removereaderdialog.cpp \
+    src/searchbookdialog.cpp \
+    src/searchreaderdialog.cpp
 
 HEADERS += \
-    BooksT.h \
-    EntriesL.h \
-    EntryObserver.h \
-    Fine.h \
-    FineDecorator.h \
-    FineDialog.h \
-    FinesL.h \
-    IEntryComponent.h \
-    Librarian.h \
-    LibrariansHT.h \
-    MainWindowObserver.h \
-    Publisher.h \
-    PublisherBuilder.h \
-    PublishersHT.h \
-    ReadersHT.h \
-    TestsAll.h \
-    TestsHashTable.h \
-    TestsList.h \
-    TestsTree.h \
-    addbookdialog.h \
-    addentrydialog.h \
-    addreaderdialog.h \
-    closeentrydialog.h \
-    dialogfactory.h \
-    mainwindow.h \
-    removebookdialog.h \
-    removereaderdialog.h \
-    searchbookdialog.h \
-    searchreaderdialog.h
+    include/BooksT.h \
+    include/EntriesL.h \
+    include/EntryObserver.h \
+    include/Fine.h \
+    include/FineDecorator.h \
+    include/FineDialog.h \
+    include/FinesL.h \
+    include/IEntryComponent.h \
+    include/Librarian.h \
+    include/LibrariansHT.h \
+    include/MainWindowObserver.h \
+    include/Publisher.h \
+    include/PublisherBuilder.h \
+    include/PublishersHT.h \
+    include/ReadersHT.h \
+    include/TestsAll.h \
+    include/TestsHashTable.h \
+    include/TestsList.h \
+    include/TestsTree.h \
+    include/addbookdialog.h \
+    include/addentrydialog.h \
+    include/addreaderdialog.h \
+    include/closeentrydialog.h \
+    include/dialogfactory.h \
+    include/mainwindow.h \
+    include/removebookdialog.h \
+    include/removereaderdialog.h \
+    include/searchbookdialog.h \
+    include/searchreaderdialog.h
 
 FORMS += \
     FineDialog.ui \
@@ -70,8 +69,3 @@ FORMS += \
     removereaderdialog.ui \
     searchbookdialog.ui \
     searchreaderdialog.ui
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target

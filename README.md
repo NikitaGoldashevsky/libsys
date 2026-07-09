@@ -58,28 +58,34 @@ make
 ## Project Structure
 
 ```
-├── BooksT.h/cpp          # Binary search tree for books
-├── ReadersHT.h/cpp       # Hash table for readers
-├── EntriesL.h/cpp        # Doubly linked list for lending entries
-├── LibrariansHT.h/cpp    # Hash table for librarians
-├── PublishersHT.h/cpp    # Hash table for publishers
-├── FinesL.h/cpp          # Fine records list
-├── IEntryComponent.h     # Component interface (Composite pattern)
-├── FineDecorator.h       # Decorator for fines on entries
-├── PublisherBuilder.h    # Builder for Publisher objects
-├── EntryObserver.h       # Observer interface
-├── MainWindowObserver.h  # UI observer
-├── FineDialog.h/cpp      # Fine management dialog
-├── DialogFactory.h/cpp   # Factory for dialogs
-├── main.cpp              # Application entry point
-├── mainwindow.h/cpp/ui   # Main window
-├── addbookdialog.h/cpp/ui
-├── removebookdialog.h/cpp/ui
-├── searchbookdialog.h/cpp/ui
-├── addreaderdialog.h/cpp/ui
-├── removereaderdialog.h/cpp/ui
-├── searchreaderdialog.h/cpp/ui
-├── addentrydialog.h/cpp/ui
-├── closeentrydialog.h/cpp/ui
-└── TestsAll.h            # Unit tests (hash table, list, tree)
+├── include/               # Header files
+│   ├── BooksT.h           # Binary search tree for books
+│   ├── ReadersHT.h        # Hash table for readers
+│   ├── EntriesL.h         # Doubly linked list for lending entries
+│   ├── LibrariansHT.h     # Hash table for librarians
+│   ├── PublishersHT.h     # Hash table for publishers
+│   ├── FinesL.h           # Fine records list
+│   ├── IEntryComponent.h  # Component interface (Composite pattern)
+│   ├── FineDecorator.h    # Decorator for fines on entries
+│   ├── PublisherBuilder.h # Builder for Publisher objects
+│   ├── EntryObserver.h    # Observer interface
+│   ├── MainWindowObserver.h # UI observer
+│   ├── dialogfactory.h    # Factory for dialogs
+│   ├── *.h                # Dialog headers
+│   └── Tests*.h           # Unit tests (hash table, list, tree)
+├── src/                   # Source files
+│   ├── BooksT.cpp
+│   ├── ReadersHT.cpp
+│   ├── EntriesL.cpp
+│   ├── LibrariansHT.cpp
+│   ├── PublishersHT.cpp
+│   ├── FinesL.cpp
+│   ├── dialogfactory.cpp
+│   ├── main.cpp           # Application entry point
+│   ├── mainwindow.cpp
+│   ├── FineDialog.cpp
+│   └── *.cpp              # Dialog implementations
+├── *.ui                   # Qt Designer form files
+├── LibSys.pro             # qmake project file
+└── README.md
 ```
