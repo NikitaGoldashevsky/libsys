@@ -1,0 +1,24 @@
+# Build outputs
+build/
+
+# Qt Creator user settings
+*.pro.user
+*.pro.user.*
+
+# Compiled object files
+*.o
+*.obj
+*.exe
+
+# Generated UI headers
+ui_*.h
+
+# Moc generated files
+moc_*.cpp
+moc_predefs.h
+qrc_*.cpp
+
+# Temp / misc project files
+combined_files*.txt
+conc.ps1
+conc_command.txt
