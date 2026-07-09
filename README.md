@@ -73,6 +73,17 @@ make
 │   ├── dialogfactory.h    # Factory for dialogs
 │   ├── *.h                # Dialog headers
 │   └── Tests*.h           # Unit tests (hash table, list, tree)
+├── forms/                 # Qt Designer form files
+│   ├── mainwindow.ui
+│   ├── addbookdialog.ui
+│   ├── addentrydialog.ui
+│   ├── addreaderdialog.ui
+│   ├── closeentrydialog.ui
+│   ├── FineDialog.ui
+│   ├── removebookdialog.ui
+│   ├── removereaderdialog.ui
+│   ├── searchbookdialog.ui
+│   └── searchreaderdialog.ui
 ├── src/                   # Source files
 │   ├── BooksT.cpp
 │   ├── ReadersHT.cpp
@@ -85,7 +96,6 @@ make
 │   ├── mainwindow.cpp
 │   ├── FineDialog.cpp
 │   └── *.cpp              # Dialog implementations
-├── *.ui                   # Qt Designer form files
 ├── LibSys.pro             # qmake project file
 └── README.md
 ```

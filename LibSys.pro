@@ -59,13 +59,13 @@ HEADERS += \
     include/searchreaderdialog.h
 
 FORMS += \
-    FineDialog.ui \
-    addbookdialog.ui \
-    addentrydialog.ui \
-    addreaderdialog.ui \
-    closeentrydialog.ui \
-    mainwindow.ui \
-    removebookdialog.ui \
-    removereaderdialog.ui \
-    searchbookdialog.ui \
-    searchreaderdialog.ui
+    forms/FineDialog.ui \
+    forms/addbookdialog.ui \
+    forms/addentrydialog.ui \
+    forms/addreaderdialog.ui \
+    forms/closeentrydialog.ui \
+    forms/mainwindow.ui \
+    forms/removebookdialog.ui \
+    forms/removereaderdialog.ui \
+    forms/searchbookdialog.ui \
+    forms/searchreaderdialog.ui
